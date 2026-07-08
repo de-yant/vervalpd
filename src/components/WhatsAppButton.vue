@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 
-const phone = "62812216280746";
+const phone = "6282216280746";
 const message = "Halo, saya ingin bertanya tentang verval peserta didik.";
 
 const messages = [

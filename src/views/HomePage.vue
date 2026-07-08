@@ -4,8 +4,8 @@
     <template v-else>
       <section class="landing gap-4 lg:gap-6 overflow-x-hidden">
       <!-- HERO -->
-      <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_12px_32px_rgba(47,99,244,0.06)] p-5 sm:p-6 relative z-10">
-        <div class="flex flex-col items-center gap-1.5 lg:gap-2 text-center">
+      <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_12px_32px_rgba(47,99,244,0.06)] p-5 sm:p-6 relative z-10 flex flex-col">
+        <div class="flex flex-col items-center justify-center gap-1.5 lg:gap-2 text-center">
           <div class="inline-flex items-center gap-1.5 w-fit mx-auto px-2.5 py-1.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] sm:text-[9px] font-black tracking-[0.12em] uppercase">
             <ShieldCheck :size="9" />
             Portal Verifikasi Peserta Didik
@@ -50,8 +50,8 @@
       </div>
 
       <!-- SEARCH -->
-      <div id="search-card" class="w-full max-w-full lg:max-w-[520px] lg:ml-auto">
-        <div v-if="networkError" class="rounded-2xl border border-[rgba(232,33,42,0.2)] bg-[rgba(232,33,42,0.06)] backdrop-blur-sm p-4 sm:p-6">
+      <div id="search-card" class="w-full max-w-full lg:max-w-[520px] lg:ml-auto flex flex-col">
+        <div v-if="networkError" class="flex-1 rounded-2xl border border-[rgba(232,33,42,0.2)] bg-[rgba(232,33,42,0.06)] backdrop-blur-sm p-4 sm:p-6">
           <div class="flex items-center gap-4">
             <div class="w-11 h-11 rounded-xl grid place-items-center bg-[rgba(232,33,42,0.12)] text-[var(--danger)] flex-shrink-0"><X :size="20" /></div>
             <div class="flex-1 min-w-0">
@@ -62,16 +62,20 @@
           </div>
         </div>
 
-        <div v-else class="rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_32px_80px_rgba(47,99,244,0.15),0_0_0_1px_rgba(47,99,244,0.08)] p-5 sm:p-7 search-card-inner">
+        <div v-else class="flex-1 rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_32px_80px_rgba(47,99,244,0.15),0_0_0_1px_rgba(47,99,244,0.08)] p-5 sm:p-7 search-card-inner">
           <div v-if="loading" class="flex items-center justify-center gap-3 min-h-[120px] rounded-xl bg-[var(--surface-2)] text-[var(--muted)] text-[14px] font-bold">
             <div class="w-9 h-9 rounded-xl bg-[var(--primary-soft)] grid place-items-center text-[var(--primary)]"><LoaderCircle class="animate-spin" :size="18" /></div>
             <span>Memuat data siswa...</span>
           </div>
 
-          <div v-else class="flex flex-col gap-4">
+          <div v-else class="flex flex-col justify-center gap-4">
             <div class="flex items-center gap-3 pb-2 border-b border-[var(--border)]">
               <div class="w-12 h-12 rounded-xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-[0_8px_22px_rgba(47,99,244,0.3)] flex-shrink-0"><SearchCheck :size="22" /></div>
               <div class="min-w-0">
+                <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
+                  <ShieldCheck :size="7" />
+                  VervalPD
+                </div>
                 <h2 class="m-0 text-[16px] font-black text-[var(--text-strong)] leading-none">Cari Data Siswa</h2>
                 <p class="m-0 text-[10px] text-[var(--muted)] leading-tight mt-1.5">{{ sekolahStore.nama }}</p>
               </div>
@@ -108,21 +112,11 @@
               </Transition>
             </div>
 
-            <!-- STEPS -->
-            <div class="flex items-center gap-1.5 flex-wrap pt-3 border-t border-[var(--border)]">
-              <div class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--surface-2)] text-[11.5px] font-black text-[var(--text)]">
-                <span class="text-[var(--primary)] text-[9px] font-black tracking-[0.05em]">01</span>
-                <Search :size="10" /><span>Cari Nama</span>
-              </div>
-              <span class="text-[var(--muted)] text-xs">→</span>
-              <div class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--surface-2)] text-[11.5px] font-black text-[var(--text)]">
-                <span class="text-[var(--primary)] text-[9px] font-black tracking-[0.05em]">02</span>
-                <BadgeCheck :size="10" /><span>Verifikasi NISN</span>
-              </div>
-              <span class="text-[var(--muted)] text-xs">→</span>
-              <div class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--surface-2)] text-[11.5px] font-black text-[var(--text)]">
-                <span class="text-[var(--primary)] text-[9px] font-black tracking-[0.05em]">03</span>
-                <FileText :size="10" /><span>Lihat Data</span>
+            <!-- TAHUN AJARAN -->
+            <div class="flex items-center justify-center gap-1.5 flex-wrap pt-3 border-t border-[var(--border)]">
+              <div class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[11.5px] font-black text-[var(--primary)]">
+                <GraduationCap :size="11" />
+                <span>Tahun Ajaran {{ tahunAjaran }}</span>
               </div>
             </div>
           </div>
@@ -199,7 +193,7 @@
 
 <script setup>
 import { computed, ref, shallowRef, onMounted, onUnmounted, nextTick } from "vue";
-import { BadgeCheck, BookOpen, ChevronRight, CircleAlert, FileText, GraduationCap, IdCard, Info, LoaderCircle, LockKeyhole, Mars, RotateCcw, Search, SearchCheck, ShieldCheck, ShieldQuestion, UnlockKeyhole, Users, Venus, X, School, ClipboardCheck } from "@/components/Icons.js";
+import { BookOpen, ChevronRight, CircleAlert, GraduationCap, IdCard, Info, LoaderCircle, LockKeyhole, Mars, RotateCcw, Search, SearchCheck, ShieldCheck, ShieldQuestion, UnlockKeyhole, Users, Venus, X, School, ClipboardCheck } from "@/components/Icons.js";
 import { useUiStore } from "@/stores/ui";
 import { useSekolahStore } from "@/stores/sekolah";
 import { getPublicSiswa } from "@/services/siswaService";
@@ -240,6 +234,13 @@ const totalLaki = ref(0);
 const totalPerempuan = ref(0);
 
 const showResultBox = computed(() => suggestions.value.length > 0 || !!searchMessage.value);
+
+const tahunAjaran = computed(() => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  return month >= 7 ? `${year}/${year + 1}` : `${year - 1}/${year}`;
+});
 
 function animateValue(targetRef, endValue, duration = 5000) {
   let startValue = 0;
@@ -368,11 +369,10 @@ let animId = null;
 
 function scrollStep() {
   const el = trackRef.value;
-  if (!el) return;
-  const maxScroll = el.scrollWidth - el.clientWidth;
-  if (maxScroll <= 0) return;
+  if (!el) { animId = requestAnimationFrame(scrollStep); return; }
+  const oneSet = el.scrollWidth / 3;
   el.scrollLeft += 0.5;
-  if (el.scrollLeft >= maxScroll) el.scrollLeft = 0;
+  if (el.scrollLeft >= oneSet) el.scrollLeft = 0;
   animId = requestAnimationFrame(scrollStep);
 }
 

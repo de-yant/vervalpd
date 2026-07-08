@@ -166,7 +166,7 @@
   padding: clamp(32px, 5vw, 72px) clamp(16px, 5vw, 56px);
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
-  align-items: center;
+  align-items: stretch;
   gap: clamp(28px, 5vw, 72px);
   overflow: visible;
 }
@@ -676,7 +676,13 @@ h1 {
   .hero-text-main { font-size: clamp(20px, 6vw, 28px) !important; }
   .search-card-inner { padding: 14px !important; }
   .links-card-inner { padding: 14px !important; }
-  .site-header { height: 54px; padding: 0 10px; }
+  .site-header { height: 54px; padding: 0 10px; gap: 6px; }
+  .site-header .brand { gap: 6px; }
+  .site-header .brand-logo { width: 34px; height: 34px; flex: 0 0 34px; border-radius: 10px; }
+  .site-header .brand-text strong { font-size: 13px; }
+  .site-header .brand-text small { font-size: 10px; }
+  .site-header .header-icon-btn { width: 32px; height: 32px; border-radius: 8px; }
+  .site-header .header-right { gap: 6px; }
   .home-page, .detail-page { padding-top: 54px; }
   .home-page { padding-bottom: 56px; }
 }
