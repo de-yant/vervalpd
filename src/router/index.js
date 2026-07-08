@@ -1,21 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import HomePage from "@/views/HomePage.vue";
-import DetailPage from "@/views/DetailPage.vue";
-import NotFoundPage from "@/views/error/NotFoundPage.vue";
-import ErrorPage from "@/views/error/ErrorPage.vue";
-
 const routes = [
   {
     path: "/",
     name: "Home",
-    component: HomePage,
+    component: () => import("@/views/HomePage.vue"),
   },
 
   {
     path: "/detail/:id",
     name: "DetailSiswa",
-    component: DetailPage,
+    component: () => import("@/views/DetailPage.vue"),
     props: true,
     meta: { requiresStudentAccess: true },
   },
@@ -23,7 +18,7 @@ const routes = [
   {
     path: "/error",
     name: "Error",
-    component: ErrorPage,
+    component: () => import("@/views/error/ErrorPage.vue"),
     props: (route) => ({
       code: route.query.code || "500",
       title: route.query.title || "Terjadi Kesalahan",
@@ -34,7 +29,7 @@ const routes = [
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
-    component: NotFoundPage,
+    component: () => import("@/views/error/NotFoundPage.vue"),
   },
 ];
 

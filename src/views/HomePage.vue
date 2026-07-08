@@ -5,20 +5,20 @@
       <section class="landing gap-4 lg:gap-6 overflow-x-hidden">
       <!-- HERO -->
       <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_12px_32px_rgba(47,99,244,0.06)] p-5 sm:p-6 relative z-10">
-        <div class="flex flex-col gap-1.5 lg:gap-2">
-          <div class="inline-flex items-center gap-1.5 w-fit px-2.5 py-1.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] sm:text-[9px] font-black tracking-[0.12em] uppercase">
+        <div class="flex flex-col items-center gap-1.5 lg:gap-2 text-center">
+          <div class="inline-flex items-center gap-1.5 w-fit mx-auto px-2.5 py-1.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] sm:text-[9px] font-black tracking-[0.12em] uppercase">
             <ShieldCheck :size="9" />
             Portal Verifikasi Peserta Didik
           </div>
 
-          <h1 class="font-black leading-[1] tracking-normal text-[var(--text-strong)]">
+          <h1 class="font-black leading-[1] tracking-normal text-[var(--text-strong)] text-center">
             <div class="text-[clamp(18px,2.8vw,28px)] pt-1 mb-2">Verifikasi & Validasi</div>
-            <div class="text-[clamp(26px,4vw,44px)] bg-gradient-to-r from-[var(--primary)] via-[#0ea5e9] to-[#6366f1] bg-clip-text text-transparent">Data Peserta Didik</div>
+            <div class="text-[clamp(26px,4vw,44px)] bg-gradient-to-r from-[var(--primary)] via-[#0ea5e9] to-[#6366f1] bg-clip-text text-transparent hero-text-main">Data Peserta Didik</div>
         </h1>
 
-          <div class="grid grid-cols-3 gap-2">
-            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250">
-              <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-[0_3px_10px_rgba(47,99,244,0.2)] sm:shadow-[0_4px_14px_rgba(47,99,244,0.24)]">
+          <div class="grid grid-cols-3 stats-grid gap-2">
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250 stat-card">
+              <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-[0_3px_10px_rgba(47,99,244,0.2)] sm:shadow-[0_4px_14px_rgba(47,99,244,0.24)] stat-icon-wrap">
                 <Users :size="14" />
               </div>
               <div class="flex flex-col items-center sm:items-start">
@@ -26,8 +26,8 @@
                 <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Peserta Didik</span>
               </div>
             </div>
-            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250">
-              <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#2563eb] to-[#3b82f6] text-white shadow-[0_3px_10px_rgba(37,99,235,0.2)] sm:shadow-[0_4px_14px_rgba(37,99,235,0.24)]">
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250 stat-card">
+              <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#2563eb] to-[#3b82f6] text-white shadow-[0_3px_10px_rgba(37,99,235,0.2)] sm:shadow-[0_4px_14px_rgba(37,99,235,0.24)] stat-icon-wrap">
                 <Mars :size="14" />
               </div>
               <div class="flex flex-col items-center sm:items-start">
@@ -35,8 +35,8 @@
                 <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Laki-laki</span>
               </div>
             </div>
-            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250">
-              <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#db2777] to-[#ec4899] text-white shadow-[0_3px_10px_rgba(219,39,119,0.2)] sm:shadow-[0_4px_14px_rgba(219,39,119,0.24)]">
+            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250 stat-card">
+              <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#db2777] to-[#ec4899] text-white shadow-[0_3px_10px_rgba(219,39,119,0.2)] sm:shadow-[0_4px_14px_rgba(219,39,119,0.24)] stat-icon-wrap">
                 <Venus :size="14" />
               </div>
               <div class="flex flex-col items-center sm:items-start">
@@ -62,7 +62,7 @@
           </div>
         </div>
 
-        <div v-else class="rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_32px_80px_rgba(47,99,244,0.15),0_0_0_1px_rgba(47,99,244,0.08)] p-5 sm:p-7">
+        <div v-else class="rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_32px_80px_rgba(47,99,244,0.15),0_0_0_1px_rgba(47,99,244,0.08)] p-5 sm:p-7 search-card-inner">
           <div v-if="loading" class="flex items-center justify-center gap-3 min-h-[120px] rounded-xl bg-[var(--surface-2)] text-[var(--muted)] text-[14px] font-bold">
             <div class="w-9 h-9 rounded-xl bg-[var(--primary-soft)] grid place-items-center text-[var(--primary)]"><LoaderCircle class="animate-spin" :size="18" /></div>
             <span>Memuat data siswa...</span>
@@ -132,7 +132,7 @@
 
     <!-- LINKS -->
     <section class="w-full max-w-4xl mx-auto px-5 sm:px-8 pb-4 sm:pb-6 overflow-x-hidden">
-      <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_12px_32px_rgba(47,99,244,0.06)] p-6 sm:p-8 relative z-10">
+      <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_12px_32px_rgba(47,99,244,0.06)] p-6 sm:p-8 links-card-inner relative z-10">
         <div class="flex items-center justify-center gap-2.5 mb-5 pb-4 border-b border-[var(--border)]">
           <GraduationCap :size="14" class="text-[var(--primary)]" />
           <span class="text-[10px] font-black tracking-[0.1em] uppercase text-[var(--muted)]">Aplikasi Lainnya</span>
@@ -198,7 +198,7 @@
 </template>
 
 <script setup>
-import { computed, ref, shallowRef, onMounted, onUnmounted } from "vue";
+import { computed, ref, shallowRef, onMounted, onUnmounted, nextTick } from "vue";
 import { BadgeCheck, BookOpen, ChevronRight, CircleAlert, FileText, GraduationCap, IdCard, Info, LoaderCircle, LockKeyhole, Mars, RotateCcw, Search, SearchCheck, ShieldCheck, ShieldQuestion, UnlockKeyhole, Users, Venus, X, School, ClipboardCheck } from "@/components/Icons.js";
 import { useUiStore } from "@/stores/ui";
 import { useSekolahStore } from "@/stores/sekolah";
@@ -272,6 +272,10 @@ async function loadDataAwal() {
       networkError.value = true;
       ui.alert({ type: "error", title: "Server Error", message: "Server sedang mengalami gangguan. Silakan coba kembali beberapa saat lagi." });
     }
+    nextTick(() => {
+      if (animId) cancelAnimationFrame(animId);
+      if (trackRef.value) animId = requestAnimationFrame(scrollStep);
+    });
   }
 }
 

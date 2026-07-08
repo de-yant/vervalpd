@@ -72,9 +72,7 @@
   justify-content: space-between;
   gap: 16px;
   border-bottom: 1px solid var(--border);
-  background: color-mix(in srgb, var(--bg) 85%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--bg);
 }
 
 .home-page {
@@ -505,9 +503,7 @@ h1 {
   border-top: 1px solid var(--border);
   color: var(--muted);
   font-size: 12.5px;
-  background: color-mix(in srgb, var(--bg) 85%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: var(--bg);
 }
 
 .home-page {
@@ -668,6 +664,21 @@ h1 {
   }
   .verify-modal { border-radius: 22px; padding-right: 46px; }
   .modal-header h3 { font-size: 19px; }
+}
+
+@media (max-width: 480px) {
+  .landing { padding: 16px 10px 18px; gap: 14px; }
+  .stats-grid { gap: 6px; }
+  .stats-grid .stat-card { padding: 8px; gap: 6px; }
+  .stats-grid .stat-card strong { font-size: 16px !important; }
+  .stats-grid .stat-card span { font-size: 7.5px !important; }
+  .stats-grid .stat-card .stat-icon-wrap { width: 28px !important; height: 28px !important; }
+  .hero-text-main { font-size: clamp(20px, 6vw, 28px) !important; }
+  .search-card-inner { padding: 14px !important; }
+  .links-card-inner { padding: 14px !important; }
+  .site-header { height: 54px; padding: 0 10px; }
+  .home-page, .detail-page { padding-top: 54px; }
+  .home-page { padding-bottom: 56px; }
 }
 
 /* ============================================================
