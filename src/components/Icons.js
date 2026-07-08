@@ -1,5 +1,6 @@
 export {
   ArrowLeft,
+  ArrowUp,
   BadgeCheck,
   BookOpen,
   CheckCircle2,
@@ -16,6 +17,8 @@ export {
   LoaderCircle,
   LockKeyhole,
   Mars,
+  Moon,
+  Sun,
   Phone,
   RotateCcw,
   School,

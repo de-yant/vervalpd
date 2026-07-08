@@ -1,21 +1,7 @@
 <template>
-  <main class="detail-page">
-    <!-- ── BACK ── -->
-    <button class="back-btn" type="button" @click="goBack">
-      <ArrowLeft :size="15" />
-      <span>Kembali</span>
-    </button>
-
+  <AppLayout :subtitle="sekolahStore.nama" :footer-text="sekolahStore.nama" page-class="detail-page">
     <!-- ── LOADING ── -->
-    <div v-if="loading" class="state-card">
-      <div class="state-icon state-icon--loading">
-        <LoaderCircle class="spin" :size="24" />
-      </div>
-      <div>
-        <h2>Memuat data siswa…</h2>
-        <p>Mohon tunggu sebentar.</p>
-      </div>
-    </div>
+    <PageLoading v-if="loading" />
 
     <!-- ── ERROR ── -->
     <div v-else-if="error" class="state-card state-card--error">
@@ -31,7 +17,7 @@
     <!-- ── CONTENT ── -->
     <template v-else-if="siswa">
       <!-- PAGE HEADER — konsisten dengan admin -->
-      <div class="page-header">
+      <div class="page-header mt-4">
         <div class="page-header-left">
           <div class="page-header-icon">
             <UserRound :size="20" />
@@ -53,6 +39,10 @@
             </div>
           </div>
         </div>
+        <button class="back-btn self-center mt-2" type="button" @click="goBack">
+          <ArrowLeft :size="15" />
+          <span>Kembali</span>
+        </button>
       </div>
 
       <!-- QUICK META -->
@@ -375,7 +365,7 @@
         </div>
       </div>
     </Transition>
-  </main>
+  </AppLayout>
 </template>
 
 <script setup>
@@ -402,6 +392,9 @@ import {
 } from "@/components/Icons.js";
 import api from "@/services/api";
 import { getPublicDetailSiswa } from "@/services/siswaService";
+import { useSekolahStore } from "@/stores/sekolah";
+import AppLayout from "@/layouts/AppLayout.vue";
+import PageLoading from "@/components/PageLoading.vue";
 
 /* ── InfoRow ── */
 const InfoRow = defineComponent({
@@ -418,6 +411,7 @@ const InfoRow = defineComponent({
 
 const router = useRouter();
 const route = useRoute();
+const sekolahStore = useSekolahStore();
 
 const loading = ref(true);
 const submitting = ref(false);
@@ -543,6 +537,7 @@ const lockMessage = computed(() => {
 /* ── Lifecycle ── */
 onMounted(async () => {
   if (siswa.value) return;
+  sekolahStore.fetchSekolah();
   await loadSiswa();
   loadFormFromLocal();
 });

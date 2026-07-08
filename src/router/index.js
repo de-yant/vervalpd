@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import HomePage from "@/views/HomePage.vue";
 import DetailPage from "@/views/DetailPage.vue";
+import NotFoundPage from "@/views/error/NotFoundPage.vue";
+import ErrorPage from "@/views/error/ErrorPage.vue";
 
 const routes = [
   {
@@ -19,8 +21,20 @@ const routes = [
   },
 
   {
+    path: "/error",
+    name: "Error",
+    component: ErrorPage,
+    props: (route) => ({
+      code: route.query.code || "500",
+      title: route.query.title || "Terjadi Kesalahan",
+      description: route.query.description || "Maaf, terjadi kesalahan pada server. Silakan coba kembali beberapa saat lagi.",
+    }),
+  },
+
+  {
     path: "/:pathMatch(.*)*",
-    redirect: "/",
+    name: "NotFound",
+    component: NotFoundPage,
   },
 ];
 
