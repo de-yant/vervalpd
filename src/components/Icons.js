@@ -32,5 +32,6 @@ export {
   UserRound,
   Users,
   Venus,
+  WifiOff,
   X,
 } from "lucide-vue-next";

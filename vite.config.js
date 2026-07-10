@@ -18,9 +18,18 @@ export default defineConfig({
     strictPort: true,
 
     allowedHosts: [
-      "vervalpd.developerin.my.id",
+      "vervalpd.smk2lppmri.sch.id",
       ".trycloudflare.com",
+      ".localhost",
     ],
+
+    proxy: {
+      "/api": {
+        target: "http://localhost:3001",
+        changeOrigin: true,
+        secure: false,
+      },
+    },
 
     watch: {
       usePolling: true,

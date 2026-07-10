@@ -15,9 +15,6 @@ export { API_URL, PB_URL };
 
 const api = axios.create({
   baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 api.interceptors.request.use((config) => {
@@ -35,7 +32,26 @@ api.interceptors.request.use((config) => {
     config.headers["x-user-id"] = user.id;
   }
 
+  // Don't set Content-Type for FormData - let axios handle it
+  if (config.data instanceof FormData) {
+    delete config.headers["Content-Type"];
+  }
+
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.code === "ECONNABORTED") {
+      error.message = "Request timeout (30 detik). Server tidak merespons.";
+    } else if (error.code === "ERR_NETWORK" || !error.response) {
+      error.message = "Tidak dapat terhubung ke server. Cek koneksi atau server backend.";
+    } else if (error.response?.status === 413) {
+      error.message = "File terlalu besar (maks 10MB).";
+    }
+    return Promise.reject(error);
+  }
+);
 
 export default api;
