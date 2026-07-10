@@ -693,9 +693,10 @@ function buatPernyataan() {
   .ttd { margin-top: 28px; }
   .ttd table { width: 100%; border: none; }
   .ttd td { text-align: center; vertical-align: top; padding: 0 20px; }
-  .ttd .space { height: 40px; }
+  .ttd .space { height: 60px; }
   .ttd td p:last-child { text-transform: uppercase; font-weight: bold; }
   .footer-note { margin-top: 12px; font-size: 10px; }
+  .footer-print { margin-top: 12px; padding-top: 8px; border-top: 1px solid #d1d5db; font-size: 9px; color: #6b7280; text-align: center; clear: both; width: 100%; }
   hr { border: none; border-top: 1px solid #000; margin: 8px 0; }
 </style></head>
 <body>
@@ -711,8 +712,8 @@ function buatPernyataan() {
     <tr><td class="lbl">Tempat/Tanggal Lahir</td><td class="colon">:</td><td>${ttl}</td></tr>
     <tr><td class="lbl">NISN</td><td class="colon">:</td><td>${getField("nisn")}</td></tr>
     <tr><td class="lbl">Nama Orang Tua</td><td class="colon"></td><td></td></tr>
-    <tr><td class="lbl" style="padding-left:20px;">a. Ayah</td><td class="colon">:</td><td style="text-transform:uppercase">${getField("nama_ayah")}</td></tr>
-    <tr><td class="lbl" style="padding-left:20px;">b. Ibu</td><td class="colon">:</td><td style="text-transform:uppercase">${getField("nama_ibu")}</td></tr>
+    <tr><td class="lbl" style="padding-left:20px;">a. Ayah</td><td class="colon">:</td><td>${getField("nama_ayah")}</td></tr>
+    <tr><td class="lbl" style="padding-left:20px;">b. Ibu</td><td class="colon">:</td><td>${getField("nama_ibu")}</td></tr>
     <tr><td class="lbl">Jurusan/Program Studi</td><td class="colon">:</td><td>${getField("nama_rombel")}</td></tr>
     <tr><td class="lbl">Satuan Pendidikan</td><td class="colon">:</td><td>${sekolahStore.nama || "SMK 2 LPPM RI MAJALAYA"}</td></tr>
     <tr><td class="lbl">NPSN</td><td class="colon">:</td><td>${sekolahStore.npsn || "20228539"}</td></tr>
@@ -724,7 +725,7 @@ function buatPernyataan() {
   <div class="pilihan">
     <label><span class="check-box"></span> Sesuai</label>
     <label><span class="check-box"></span> Tidak Sesuai</label>
-    <span style="font-size:10px;color:#6b7280;font-style:italic;">(Pilih salah satu dengan memberi tanda centang)</span>
+    <span style="font-size:10px;color:#6b7280;font-style:italic; margin-top:4px;">(Pilih salah satu dengan memberi tanda centang)</span>
   </div>
 
   <p class="body-text">
@@ -753,14 +754,13 @@ function buatPernyataan() {
         <td>
           <p>Mengetahui,</p>
           <p>Orang Tua/Wali Murid</p>
-          <div class="space" style="height:52px"></div>
+          <div class="space"></div>
           <p>${getField("nama_ayah") || getField("nama_ibu") || "____________________"}</p>
         </td>
         <td>
           <p>Bandung, ${tgl}</p>
           <p>Yang Membuat Pernyataan</p>
-          <p style="font-size:9px;margin:2px 0;color:#6b7280;">(Materai 10.000)</p>
-          <div class="space" style="height:40px"></div>
+          <div class="space"></div>
           <p>${nama}</p>
         </td>
       </tr>
@@ -771,6 +771,7 @@ function buatPernyataan() {
     <p>*) Jika ada kekeliruan pada identitas murid, harap menghubungi Sekolah/Madrasah untuk dilakukan perbaikan sesuai mekanisme yang telah ditetapkan</p>
     <p>**) Identitas murid pada lembar ini akan dijadikan rujukan dalam pencetakan Ijazah</p>
   </div>
+
 </body></html>`;
 }
 
