@@ -208,6 +208,28 @@
           </span>
         </div>
 
+        <!-- Review result -->
+        <div v-if="submitLock.reviewedBy || submitLock.catatanAdmin || submitLock.status" class="review-card">
+          <div class="review-row">
+            <span class="review-label">Status</span>
+            <span class="review-badge" :class="`review-badge--${(submitLock.status || '').toLowerCase()}`">
+              {{ submitLock.status || "-" }}
+            </span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Direview oleh</span>
+            <span class="review-value">{{ submitLock.reviewedBy || "-" }}</span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Tanggal review</span>
+            <span class="review-value">{{ formatTanggal(submitLock.reviewedAt) }}</span>
+          </div>
+          <div v-if="submitLock.catatanAdmin" class="review-row review-row--note">
+            <span class="review-label">Catatan admin</span>
+            <span class="review-value">{{ submitLock.catatanAdmin }}</span>
+          </div>
+        </div>
+
         <!-- Submission status -->
         <div v-else-if="submissionStatus" class="status-banner" :class="`status-banner--${submissionStatus.type}`">
           <div class="status-icon">
@@ -265,7 +287,7 @@
               <textarea
                 v-model.trim="form.pesan"
                 rows="3"
-                placeholder="Contoh: Nama ibu salah, tanggal lahir belum sesuai…"
+                placeholder="Contoh: Nama ibu salah, tanggal lahir belum sesuai"
               ></textarea>
             </div>
 
@@ -278,41 +300,41 @@
                 <label>{{ doc.label }}</label>
                 <div class="upload-box" :class="{ 'upload-box--filled': form[doc.key]?.length }">
                   <Upload :size="14" />
-                  <span>Pilih file…</span>
+                  <span>{{ form[doc.key]?.[0]?.name || "Pilih file…" }}</span>
+                  <button
+                    v-if="form[doc.key]?.length"
+                    type="button"
+                    class="file-remove"
+                    @click.stop="removeFile(doc.key)"
+                  >
+                    <X :size="12" />
+                  </button>
                   <input
                     type="file"
                     accept=".jpg,.jpeg,.png,.pdf"
                     @change="setFile($event, doc.key)"
                   />
                 </div>
-                <div v-if="form[doc.key]?.length" class="file-list">
-                  <div class="file-item">
-                    <span class="file-name">{{ form[doc.key][0].name }}</span>
-                    <button
-                      type="button"
-                      class="file-remove"
-                      @click="removeFile(doc.key)"
-                    >
-                      <X :size="12" />
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
 
             <div class="form-note">
               <Info :size="13" />
-              <span
-                >Format: JPG, PNG, atau PDF. Maksimal 5 file total. Minimal 1
-                dokumen wajib dilampirkan.</span
-              >
+              <div>
+                <p class="form-note__title">Ketentuan:</p>
+                <ul class="form-note__list">
+                  <li>Format: JPG, PNG, atau PDF.</li>
+                  <li>Minimal 1 file (Kartu Keluarga) wajib dilampirkan.</li>
+                  <li>Maksimal 5 MB per file.</li>
+                </ul>
+              </div>
             </div>
           </div>
         </Transition>
 
 <!-- Actions -->
         <div v-if="!isLockedSubmit" class="verify-actions">
-          <div v-if="submitting && uploadProgress > 0" class="upload-progress">
+          <div v-if="submitting && uploadProgress > 0" class="upload-progress md:order-2">
             <div class="progress-bar">
               <div class="progress-fill" :style="{ width: uploadProgress + '%' }"></div>
             </div>
@@ -320,38 +342,38 @@
           </div>
 
           <button
-            class="action-btn action-btn--ghost"
-            type="button"
-            :disabled="submitting || submissionStatus"
-            @click="resetPilihan"
-          >
-            <RotateCcw :size="14" /> Reset
-          </button>
-
-          <button
             v-if="verificationStatus === 'sesuai'"
-            class="action-btn action-btn--success"
+            class="action-btn action-btn--success md:order-1"
             type="button"
             :disabled="submitting || submissionStatus"
             @click="submitSesuai"
           >
             <LoaderCircle v-if="submitting" class="spin" :size="14" />
-            <CheckCircle2 v-else :size="14" />
+            <Send v-else :size="14" />
             Data Sesuai & Selesai
           </button>
 
           <button
             v-else
-            class="action-btn action-btn--primary"
+            class="action-btn action-btn--primary md:order-1"
             type="button"
             :disabled="submitting || submissionStatus || !canSubmitPerbaikan"
             @click="submitPerbaikan"
           >
             <LoaderCircle v-if="submitting && uploadProgress === 0" class="spin" :size="14" />
-            <CheckCircle2 v-else-if="!submitting" :size="14" />
-            <span v-if="submitting && uploadProgress > 0">{{ uploadProgress }}%</span>
-            <Send v-else-if="!submitting" :size="14" />
+            <span v-else-if="submitting && uploadProgress > 0">{{ uploadProgress }}%</span>
+            <Send v-else :size="14" />
             {{ submitting ? "Mengirim..." : "Kirim Pengajuan Perbaikan" }}
+          </button>
+
+          <button
+            class="action-btn action-btn--ghost md:order-0"
+            type="button"
+            :disabled="submitting || submissionStatus"
+            @click="resetPilihan"
+          >
+            <RotateCcw :size="14" />
+            {{ verificationStatus === "sesuai" ? "Batal" : "Reset" }}
           </button>
         </div>
       </div>
@@ -403,7 +425,9 @@ import {
 } from "@/components/Icons.js";
 import api from "@/services/api";
 import { getPublicDetailSiswa } from "@/services/siswaService";
+import { clearDraftFiles, deleteDraftFile, loadDraftFile, saveDraftFile } from "@/services/fileStore";
 import { useSekolahStore } from "@/stores/sekolah";
+import { useUiStore } from "@/stores/ui";
 import AppLayout from "@/layouts/AppLayout.vue";
 import PageLoading from "@/components/PageLoading.vue";
 
@@ -423,13 +447,14 @@ const InfoRow = defineComponent({
 const router = useRouter();
 const route = useRoute();
 const sekolahStore = useSekolahStore();
+const ui = useUiStore();
 
 const loading = ref(true);
 const submitting = ref(false);
 const uploadProgress = ref(0);
 const siswa = ref(null);
 const verificationStatus = ref("sesuai");
-const submitLock = ref({ type: "", expiredAt: null });
+const submitLock = ref({ type: "", expiredAt: null, status: "", pesan: "", reviewedBy: "", reviewedAt: "", catatanAdmin: "" });
 const submissionStatus = ref(null);
 
 const form = ref({
@@ -448,6 +473,7 @@ const uploadDocs = [
 ];
 
 const MAX_FILES = 5;
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB, sama dengan batas server
 
 const modal = ref({ show: false, type: "success", title: "", message: "" });
 
@@ -470,15 +496,18 @@ function saveFormToLocal() {
   } catch {}
 }
 
-function loadFormFromLocal() {
+async function loadFormFromLocal() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY.value);
     if (!raw) return;
     const data = JSON.parse(raw);
     verificationStatus.value = data.verificationStatus || "sesuai";
     form.value.pesan = data.pesan || "";
-    // File objects can't be stored in localStorage, only names
-    // User will need to re-select files after reload
+    // File objects disimpan di IndexedDB (blob), direstorasi di sini
+    for (const key of ["kk", "ijazah_smp", "akta", "pendukung"]) {
+      const file = await loadDraftFile(route.params.id, key);
+      if (file) form.value[key] = [file];
+    }
   } catch {}
 }
 
@@ -526,7 +555,7 @@ const canSubmitPerbaikan = computed(() => {
     (form.value.pendukung?.length || 0);
   return verificationStatus.value === "tidak_sesuai" &&
     form.value.pesan.length >= 5 &&
-    totalFiles >= 1 &&
+    form.value.kk?.length >= 1 &&
     totalFiles <= MAX_FILES;
 });
 const isLockedSubmit = computed(() =>
@@ -548,7 +577,7 @@ onMounted(async () => {
   if (siswa.value) return;
   sekolahStore.fetchSekolah();
   await loadSiswa();
-  loadFormFromLocal();
+  await loadFormFromLocal();
 });
 
 let hasInteracted = false;
@@ -627,15 +656,23 @@ async function loadStatusPengajuan() {
     const res = await api.get(`/api/pengajuan-verval/public/check-status?id=${siswa.value.id}`);
     const data = res.data?.data;
     if (!data || data.is_locked === false) {
-      submitLock.value = { type: "", expiredAt: null };
+      submitLock.value = { type: "", expiredAt: null, status: "", pesan: "", reviewedBy: "", reviewedAt: "", catatanAdmin: "" };
       verificationStatus.value = "sesuai";
       return;
     }
-    submitLock.value = { type: data.tipe, expiredAt: data.expired_at_lock };
+    submitLock.value = {
+      type: data.tipe,
+      expiredAt: data.expired_at_lock,
+      status: data.status || "",
+      pesan: data.pesan || "",
+      reviewedBy: data.reviewed_by || "",
+      reviewedAt: data.reviewed_at || "",
+      catatanAdmin: data.catatan_admin || "",
+    };
     verificationStatus.value =
       data.tipe === "PERBAIKAN" ? "tidak_sesuai" : "sesuai";
   } catch {
-    submitLock.value = { type: "", expiredAt: null };
+    submitLock.value = { type: "", expiredAt: null, status: "", pesan: "", reviewedBy: "", reviewedAt: "", catatanAdmin: "" };
   }
 }
 
@@ -775,7 +812,13 @@ function previewPernyataan(html, nama, nisn) {
 function setFile(event, key) {
   const file = event.target.files?.[0];
   if (file) {
+    if (file.size > MAX_FILE_SIZE) {
+      ui.error(`File ${file.name} melebihi batas 5 MB (saat ini ${(file.size / 1024 / 1024).toFixed(2)} MB)`, "Ukuran File Terlalu Besar");
+      event.target.value = "";
+      return;
+    }
     form.value[key] = [file];
+    saveDraftFile(route.params.id, key, file);
     saveFormToLocal();
   }
   event.target.value = "";
@@ -783,6 +826,7 @@ function setFile(event, key) {
 
 function removeFile(key) {
   form.value[key] = [];
+  deleteDraftFile(route.params.id, key);
   saveFormToLocal();
 }
 
@@ -855,13 +899,14 @@ function clearForm() {
     akta: [],
     pendukung: [],
   };
+  clearDraftFiles(route.params.id);
   clearFormFromLocal();
 }
 
 function lockSubmitFor30Days(type) {
   const expiredAt = new Date();
   expiredAt.setDate(expiredAt.getDate() + 30);
-  submitLock.value = { type, expiredAt: expiredAt.toISOString() };
+  submitLock.value = { type, expiredAt: expiredAt.toISOString(), status: "", pesan: "", reviewedBy: "", reviewedAt: "", catatanAdmin: "" };
 }
 
 function showModal(type, title, message) {
