@@ -1,17 +1,12 @@
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
-const PB_URL = import.meta.env.VITE_PB_URL;
 
 if (!API_URL) {
   throw new Error("VITE_API_URL belum ada di .env");
 }
 
-if (!PB_URL) {
-  throw new Error("VITE_PB_URL belum ada di .env");
-}
-
-export { API_URL, PB_URL };
+export { API_URL };
 
 const api = axios.create({
   baseURL: API_URL,

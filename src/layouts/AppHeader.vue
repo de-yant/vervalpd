@@ -66,39 +66,41 @@ onMounted(() => {
 
 <template>
   <header class="site-header">
-    <slot>
-      <button type="button" class="brand" @click="goHome">
-        <span class="brand-logo">
-          <GraduationCap :size="22" />
-        </span>
-          <span class="brand-text">
-            <strong>{{ subtitle }}</strong>
-            <small>VervalPD</small>
+    <div class="site-header-inner">
+      <slot>
+        <button type="button" class="brand" @click="goHome">
+          <span class="brand-logo">
+            <GraduationCap :size="22" />
           </span>
-      </button>
-      <nav class="header-right">
-        <button
-          type="button"
-          class="header-icon-btn"
-          title="Muat ulang data"
-          aria-label="Muat ulang data"
-          :disabled="refreshing"
-          @click="handleRefresh"
-        >
-          <RotateCcw :size="17" :class="{ spin: refreshing }" />
+            <span class="brand-text">
+              <strong>{{ subtitle }}</strong>
+              <small>VervalPD</small>
+            </span>
         </button>
+        <nav class="header-right">
+          <button
+            type="button"
+            class="header-icon-btn"
+            title="Muat ulang data"
+            aria-label="Muat ulang data"
+            :disabled="refreshing"
+            @click="handleRefresh"
+          >
+            <RotateCcw :size="17" :class="{ spin: refreshing }" />
+          </button>
 
-        <button
-          type="button"
-          class="header-icon-btn"
-          :title="isDark ? 'Mode terang' : 'Mode gelap'"
-          :aria-label="isDark ? 'Mode terang' : 'Mode gelap'"
-          @click="toggleTheme"
-        >
-          <Sun v-if="isDark" :size="17" />
-          <Moon v-else :size="17" />
-        </button>
-      </nav>
-    </slot>
+          <button
+            type="button"
+            class="header-icon-btn"
+            :title="isDark ? 'Mode terang' : 'Mode gelap'"
+            :aria-label="isDark ? 'Mode terang' : 'Mode gelap'"
+            @click="toggleTheme"
+          >
+            <Sun v-if="isDark" :size="17" />
+            <Moon v-else :size="17" />
+          </button>
+        </nav>
+      </slot>
+    </div>
   </header>
 </template>

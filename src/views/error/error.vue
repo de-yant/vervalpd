@@ -2,7 +2,7 @@
   <AppLayout subtitle="Terjadi kesalahan">
     <section class="error-page-section">
       <div class="error-page-card">
-        <AppError :code="code" :title="title" :description="description" variant="danger">
+        <AppError :code="code" :title="title" :description="description" :variant="variant">
           <div class="error-actions">
             <button type="button" class="error-btn error-btn--primary" @click="goHome">
               <ArrowLeft :size="16" />
@@ -20,18 +20,27 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { ArrowLeft, RotateCcw } from "@/components/Icons.js";
 import AppError from "@/components/AppError.vue";
 import AppLayout from "@/layouts/AppLayout.vue";
 
-defineProps({
+const props = defineProps({
   code: { type: String, default: "500" },
-  title: { type: String, default: "Terjadi Kesalahan" },
+  title: { type: String, default: "" },
   description: {
     type: String,
-    default: "Maaf, terjadi kesalahan pada server. Silakan coba kembali beberapa saat lagi.",
+    default: "",
   },
+});
+
+const variant = computed(() => {
+  const c = String(props.code || "");
+  if (c === "network") return "danger";
+  if (c.startsWith("4")) return "warning";
+  if (c.startsWith("5")) return "danger";
+  return "muted";
 });
 
 const router = useRouter();
@@ -50,6 +59,11 @@ const reloadPage = () => window.location.reload();
 .error-page-card {
   width: 100%;
   max-width: 480px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  box-shadow: 0 12px 32px rgba(47, 99, 244, 0.06);
+  padding: 24px 24px 28px;
 }
 .error-actions {
   display: flex;

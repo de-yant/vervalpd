@@ -8,6 +8,9 @@ export const useSekolahStore = defineStore("sekolah", {
     nama: "Nama Sekolah",
     npsn: "-",
     bentuk_pendidikan: "",
+    periodeId: "",
+    tahunAjaran: "",
+    semester: "",
     loaded: false,
     lastFetched: null,
   }),
@@ -29,6 +32,9 @@ export const useSekolahStore = defineStore("sekolah", {
 
         this.npsn = data?.npsn || "-";
         this.bentuk_pendidikan = data?.bentuk_pendidikan || "";
+        this.periodeId = data?.periode?.id || "";
+        this.tahunAjaran = data?.periode?.tahun_ajaran || "";
+        this.semester = data?.periode?.semester || "";
         this.loaded = true;
         this.lastFetched = Date.now();
       } catch {

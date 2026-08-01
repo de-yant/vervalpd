@@ -4,6 +4,7 @@ export {
   BadgeCheck,
   BookOpen,
   CheckCircle2,
+  ChevronDown,
   ChevronRight,
   CircleAlert,
   ClipboardCheck,

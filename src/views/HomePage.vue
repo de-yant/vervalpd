@@ -3,93 +3,83 @@
     <PageLoading v-if="loading" />
     <template v-else>
       <section class="landing gap-4 lg:gap-6 overflow-x-hidden">
-      <!-- HERO -->
-      <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_12px_32px_rgba(47,99,244,0.06)] p-5 sm:p-6 relative z-10 flex flex-col">
-        <div class="flex flex-col items-center justify-center gap-1.5 lg:gap-2 text-center">
-          <div class="inline-flex items-center gap-1.5 w-fit mx-auto px-2.5 py-1.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] sm:text-[9px] font-black tracking-[0.12em] uppercase">
-            <ShieldCheck :size="9" />
-            Portal Verifikasi Peserta Didik
+      <!-- NETWORK ERROR FULL WIDTH -->
+      <div v-if="networkError" class="col-span-full w-full rounded-2xl border border-[rgba(232,33,42,0.2)] bg-[rgba(232,33,42,0.06)] backdrop-blur-sm p-6 sm:p-8">
+        <div class="flex flex-col items-center justify-center gap-4 text-center">
+          <div class="w-14 h-14 rounded-2xl grid place-items-center bg-[rgba(232,33,42,0.12)] text-[var(--danger)]"><WifiOff :size="26" /></div>
+          <div>
+            <h2 class="m-0 text-[16px] font-black text-[var(--text-strong)]">Koneksi Terputus</h2>
+            <p class="m-0 text-[13px] text-[var(--muted)] mt-1">Tidak dapat menghubungi server. Periksa koneksi internet Anda lalu coba lagi.</p>
           </div>
-
-          <h1 class="font-black leading-[1] tracking-normal text-[var(--text-strong)] text-center">
-            <div class="text-[clamp(18px,2.8vw,28px)] pt-1 mb-2">Verifikasi & Validasi</div>
-            <div class="text-[clamp(26px,4vw,44px)] bg-gradient-to-r from-[var(--primary)] via-[#0ea5e9] to-[#6366f1] bg-clip-text text-transparent hero-text-main">Data Peserta Didik</div>
-        </h1>
-
-          <div class="grid grid-cols-3 stats-grid gap-2">
-            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250 stat-card">
-              <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-[0_3px_10px_rgba(47,99,244,0.2)] sm:shadow-[0_4px_14px_rgba(47,99,244,0.24)] stat-icon-wrap">
-                <Users :size="14" />
-              </div>
-              <div class="flex flex-col items-center sm:items-start">
-                <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalSiswa }}</strong>
-                <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Peserta Didik</span>
-              </div>
-            </div>
-            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250 stat-card">
-              <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#2563eb] to-[#3b82f6] text-white shadow-[0_3px_10px_rgba(37,99,235,0.2)] sm:shadow-[0_4px_14px_rgba(37,99,235,0.24)] stat-icon-wrap">
-                <Mars :size="14" />
-              </div>
-              <div class="flex flex-col items-center sm:items-start">
-                <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalLaki }}</strong>
-                <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Laki-laki</span>
-              </div>
-            </div>
-            <div class="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250 stat-card">
-              <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#db2777] to-[#ec4899] text-white shadow-[0_3px_10px_rgba(219,39,119,0.2)] sm:shadow-[0_4px_14px_rgba(219,39,119,0.24)] stat-icon-wrap">
-                <Venus :size="14" />
-              </div>
-              <div class="flex flex-col items-center sm:items-start">
-                <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalPerempuan }}</strong>
-                <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Perempuan</span>
-              </div>
-            </div>
-          </div>
-
+          <button type="button" class="flex items-center gap-1.5 h-10 px-4 rounded-xl bg-[var(--danger)] text-white text-[13px] font-black hover:brightness-110 transition-all" @click="retryLoad"><RotateCcw :size="15" /> Coba Lagi</button>
         </div>
       </div>
 
-      <!-- SEARCH -->
-      <div id="search-card" class="w-full max-w-full lg:max-w-[520px] lg:ml-auto flex flex-col">
-        <div v-if="networkError" class="flex-1 rounded-2xl border border-[rgba(232,33,42,0.2)] bg-[rgba(232,33,42,0.06)] backdrop-blur-sm p-4 sm:p-6">
-          <div class="flex items-center gap-4">
-            <div class="w-11 h-11 rounded-xl grid place-items-center bg-[rgba(232,33,42,0.12)] text-[var(--danger)] flex-shrink-0"><X :size="20" /></div>
-            <div class="flex-1 min-w-0">
-              <strong class="block text-[14px] font-black text-[var(--text-strong)]">Koneksi Terputus</strong>
-              <small class="block text-[12px] text-[var(--muted)] mt-0.5">Tidak dapat menghubungi server.</small>
+      <!-- ALUR (KIRI) + TITLE/COUNT & SEARCH (KANAN) -->
+      <div class="w-full grid gap-4 md:gap-6 md:grid-cols-2 items-stretch col-span-full">
+        <!-- ALUR VERVAL -->
+        <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_12px_32px_rgba(47,99,244,0.06)] p-5 sm:p-7 relative z-10 flex flex-col order-last md:order-none">
+            <div class="flex items-center justify-between gap-3 pb-2 border-b border-[var(--border)] mb-4">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-12 h-12 rounded-xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-[0_8px_22px_rgba(47,99,244,0.3)] flex-shrink-0"><ClipboardCheck :size="22" /></div>
+                <div>
+                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
+                    <ShieldCheck :size="7" />
+                    Panduan
+                  </div>
+                  <h2 class="m-0 text-[16px] font-black text-[var(--text-strong)] leading-none">Alur Verval</h2>
+                </div>
+              </div>
+              <span class="w-9 h-9 rounded-xl grid place-items-center bg-[var(--surface-2)] text-[var(--muted)] shrink-0"><ChevronRight :size="15" /></span>
             </div>
-            <button type="button" class="flex items-center gap-1.5 h-9 px-3.5 rounded-xl bg-[var(--danger)] text-white text-[12px] font-black whitespace-nowrap hover:brightness-110 transition-all" @click="retryLoad"><RotateCcw :size="14" /> Coba Lagi</button>
+          <div class="flex-1 flex flex-col">
+            <div v-for="(step, i) in alurSteps" :key="i" class="flex flex-col items-center">
+              <div class="w-full flex items-center gap-3 p-3 rounded-xl lg:gap-2.5 lg:p-2.5 border-2 border-[rgba(47,99,244,0.18)] bg-gradient-to-r from-[var(--primary-soft)] to-[var(--surface-2)] shadow-[0_3px_10px_rgba(47,99,244,0.08)]">
+                <span class="w-8 h-8 rounded-full grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white text-[12px] font-black shrink-0 shadow-[0_3px_10px_rgba(47,99,244,0.3)] lg:w-7 lg:h-7 lg:text-[11px]">{{ i + 1 }}</span>
+                <span class="flex-1 min-w-0 text-[12.5px] font-bold text-[var(--text)] leading-snug lg:text-[12px]">{{ step }}</span>
+              </div>
+              <div v-if="i < alurSteps.length - 1" class="my-1 text-[var(--primary)] lg:my-0.5">
+                <ChevronDown :size="18" class="mx-auto" />
+              </div>
+            </div>
           </div>
         </div>
 
-        <div v-else class="flex-1 rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_32px_80px_rgba(47,99,244,0.15),0_0_0_1px_rgba(47,99,244,0.08)] p-5 sm:p-7 search-card-inner">
+        <!-- KANAN: TITLE + COUNT + SEARCH -->
+        <div class="flex flex-col gap-4 md:gap-6 min-w-0">
+          <!-- SEARCH -->
+          <div id="search-card" class="w-full flex flex-col">
+        <div class="flex-1 rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_32px_80px_rgba(47,99,244,0.15),0_0_0_1px_rgba(47,99,244,0.08)] p-5 sm:p-7 search-card-inner">
           <div v-if="loading" class="flex items-center justify-center gap-3 min-h-[120px] rounded-xl bg-[var(--surface-2)] text-[var(--muted)] text-[14px] font-bold">
             <div class="w-9 h-9 rounded-xl bg-[var(--primary-soft)] grid place-items-center text-[var(--primary)]"><LoaderCircle class="animate-spin" :size="18" /></div>
-            <span>Memuat data siswa...</span>
+            <span>Memuat data murid...</span>
           </div>
 
           <div v-else class="flex flex-col justify-center gap-4">
-            <div class="flex items-center gap-3 pb-2 border-b border-[var(--border)]">
-              <div class="w-12 h-12 rounded-xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-[0_8px_22px_rgba(47,99,244,0.3)] flex-shrink-0"><SearchCheck :size="22" /></div>
-              <div class="min-w-0">
-                <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
-                  <ShieldCheck :size="7" />
-                  VervalPD
+            <div class="flex items-center justify-between gap-3 pb-2 border-b border-[var(--border)]">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-12 h-12 rounded-xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-[0_8px_22px_rgba(47,99,244,0.3)] flex-shrink-0"><SearchCheck :size="22" /></div>
+                <div class="min-w-0">
+                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
+                    <ShieldCheck :size="7" />
+                    VervalPD
+                  </div>
+                  <h2 class="m-0 text-[16px] font-black text-[var(--text-strong)] leading-none">Cari Data Murid</h2>
                 </div>
-                <h2 class="m-0 text-[16px] font-black text-[var(--text-strong)] leading-none">Cari Data Siswa</h2>
-                <p class="m-0 text-[10px] text-[var(--muted)] leading-tight mt-1.5">{{ sekolahStore.nama }}</p>
               </div>
+              <span class="w-9 h-9 rounded-xl grid place-items-center bg-[var(--surface-2)] text-[var(--muted)] shrink-0"><IdCard :size="15" /></span>
             </div>
 
             <div class="relative">
-              <div class="flex items-center gap-3 h-[48px] sm:h-[54px] px-3 sm:px-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--surface-2)] transition-all duration-250 has-[:focus]:border-[var(--primary)] has-[:focus]:bg-[var(--card)] has-[:focus]:shadow-[0_0_0_4px_var(--primary-soft),0_8px_24px_rgba(47,99,244,0.1)]">
+              <div class="flex items-center gap-3 h-[48px] sm:h-[54px] px-3 sm:px-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--surface-2)] transition-all duration-250 has-[:focus]:border-[var(--primary)] has-[:focus]:bg-[var(--card)] has-[:focus]:shadow-[0_0_0_4px_var(--primary-soft),0_8px_24px_rgba(47,99,244,0.1)]" :class="{ 'opacity-50 cursor-not-allowed': searchDisabled }" @click="onSearchBoxClick">
                 <Search :size="18" class="text-[var(--muted)] shrink-0" />
                 <input
                   v-model="keyword"
                   type="text"
                   placeholder="Ketik minimal 3 huruf nama peserta didik..."
                   autocomplete="off"
-                  class="flex-1 min-w-0 bg-transparent border-0 outline-none shadow-none text-[14px] text-[var(--text-strong)] placeholder:text-[var(--muted)] py-3"
+                  :disabled="searchDisabled"
+                  class="flex-1 min-w-0 bg-transparent border-0 outline-none shadow-none text-[14px] text-[var(--text-strong)] placeholder:text-[var(--muted)] py-3 disabled:cursor-not-allowed disabled:pointer-events-none"
                   @input="onSearchInput"
                   @focus="searchFocused = true; searchSiswa()"
                   @blur="searchFocused = false"
@@ -114,18 +104,97 @@
 
             <!-- TAHUN AJARAN -->
             <div class="flex items-center justify-center gap-1.5 flex-wrap pt-3 border-t border-[var(--border)]">
-              <div class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[11.5px] font-black text-[var(--primary)]">
+              <div v-if="tahunAjaran" class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[11.5px] font-black text-[var(--primary)]">
                 <GraduationCap :size="11" />
                 <span>Tahun Ajaran {{ tahunAjaran }}</span>
+              </div>
+              <div v-if="semester" class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[11.5px] font-black text-[var(--primary)]">
+                <BookOpen :size="11" />
+                <span>Semester {{ semester }}</span>
               </div>
             </div>
           </div>
         </div>
       </div>
+          <!-- TITLE + COUNT -->
+          <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_12px_32px_rgba(47,99,244,0.06)] p-5 sm:p-7 flex flex-col">
+            <div class="flex items-center justify-between gap-3 pb-2 border-b border-[var(--border)] mb-4">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-12 h-12 rounded-xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-[0_8px_22px_rgba(47,99,244,0.3)] flex-shrink-0"><Users :size="22" /></div>
+                <div>
+                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
+                    <ShieldCheck :size="7" />
+                    Statistik
+                  </div>
+                  <h2 class="m-0 text-[16px] font-black text-[var(--text-strong)] leading-none">Data Peserta Didik</h2>
+                </div>
+              </div>
+              <span class="w-9 h-9 rounded-xl grid place-items-center bg-[var(--surface-2)] text-[var(--muted)] shrink-0"><Hash :size="15" /></span>
+            </div>
+
+            <div class="grid grid-cols-3 stats-grid gap-2">
+              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250 stat-card">
+                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-[0_3px_10px_rgba(47,99,244,0.2)] sm:shadow-[0_4px_14px_rgba(47,99,244,0.24)] stat-icon-wrap">
+                  <Users :size="14" />
+                </div>
+                <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
+                  <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalSiswa }}</strong>
+                  <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Peserta Didik</span>
+                </div>
+              </div>
+              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250 stat-card">
+                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#2563eb] to-[#3b82f6] text-white shadow-[0_3px_10px_rgba(37,99,235,0.2)] sm:shadow-[0_4px_14px_rgba(37,99,235,0.24)] stat-icon-wrap">
+                  <Mars :size="14" />
+                </div>
+                <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
+                  <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalLaki }}</strong>
+                  <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Laki-laki</span>
+                </div>
+              </div>
+              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250 stat-card">
+                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#db2777] to-[#ec4899] text-white shadow-[0_3px_10px_rgba(219,39,119,0.2)] sm:shadow-[0_4px_14px_rgba(219,39,119,0.24)] stat-icon-wrap">
+                  <Venus :size="14" />
+                </div>
+                <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
+                  <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalPerempuan }}</strong>
+                  <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Perempuan</span>
+                </div>
+              </div>
+              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250 stat-card">
+                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#16a34a] to-[#22c55e] text-white shadow-[0_3px_10px_rgba(22,163,74,0.2)] sm:shadow-[0_4px_14px_rgba(22,163,74,0.24)] stat-icon-wrap">
+                  <GraduationCap :size="14" />
+                </div>
+                <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
+                  <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalKelasX }}</strong>
+                  <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Kelas X</span>
+                </div>
+              </div>
+              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250 stat-card">
+                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#eab308] to-[#facc15] text-white shadow-[0_3px_10px_rgba(234,179,8,0.2)] sm:shadow-[0_4px_14px_rgba(234,179,8,0.24)] stat-icon-wrap">
+                  <GraduationCap :size="14" />
+                </div>
+                <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
+                  <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalKelasXI }}</strong>
+                  <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Kelas XI</span>
+                </div>
+              </div>
+              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-[0_4px_16px_rgba(47,99,244,0.08)] hover:-translate-y-0.5 transition-all duration-250 stat-card">
+                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#dc2626] to-[#ef4444] text-white shadow-[0_3px_10px_rgba(220,38,38,0.2)] sm:shadow-[0_4px_14px_rgba(220,38,38,0.24)] stat-icon-wrap">
+                  <GraduationCap :size="14" />
+                </div>
+                <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
+                  <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalKelasXII }}</strong>
+                  <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Kelas XII</span>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+      </div>
     </section>
 
     <!-- LINKS -->
-    <section class="w-full max-w-4xl mx-auto px-5 sm:px-8 pb-4 sm:pb-6 overflow-x-hidden">
+    <section class="links-section w-full max-w-4xl mx-auto overflow-x-hidden">
       <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_12px_32px_rgba(47,99,244,0.06)] p-6 sm:p-8 links-card-inner relative z-10">
         <div class="flex items-center justify-center gap-2.5 mb-5 pb-4 border-b border-[var(--border)]">
           <GraduationCap :size="14" class="text-[var(--primary)]" />
@@ -155,7 +224,7 @@
             <div class="w-12 h-12 rounded-2xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-[0_8px_22px_rgba(47,99,244,0.28)]"><LockKeyhole :size="22" /></div>
             <div>
               <p class="m-0 text-[9.5px] font-black tracking-[0.12em] uppercase text-[var(--primary)]">VervalPD App</p>
-              <h3 class="m-0 text-[var(--text-strong)] text-[17px] font-black leading-tight" style="margin-top: 2px">Verifikasi Siswa</h3>
+              <h3 class="m-0 text-[var(--text-strong)] text-[17px] font-black leading-tight" style="margin-top: 2px">Verifikasi Murid</h3>
             </div>
           </div>
 
@@ -169,13 +238,13 @@
             </div>
 
             <div class="grid gap-1.5">
-              <label class="inline-flex items-center gap-1.5 text-[var(--text)] text-[12.5px] font-black"><IdCard :size="14" /> NISN Siswa</label>
+              <label class="inline-flex items-center gap-1.5 text-[var(--text)] text-[12.5px] font-black"><IdCard :size="14" /> NISN Murid</label>
               <input v-model="nisnInput" type="text" placeholder="Masukkan NISN" autocomplete="off" class="w-full h-11 px-3.5 rounded-xl border-2 border-[var(--border)] bg-[var(--surface-2)] text-[var(--text-strong)] text-[13.5px] placeholder:text-[12px] outline-none transition-all duration-200 box-border focus:border-[var(--primary)] focus:bg-[var(--card)] focus:shadow-[0_0_0_4px_var(--primary-soft)]" />
             </div>
 
             <div class="grid gap-1.5">
               <label class="inline-flex items-center gap-1.5 text-[var(--text)] text-[12.5px] font-black"><ShieldQuestion :size="14" /> Captcha: berapa {{ captcha?.a }} + {{ captcha?.b }}?</label>
-              <input v-model.number="captchaInput" type="number" placeholder="Tulis jawaban di sini" max="100" autocomplete="off" class="w-full h-11 px-3.5 rounded-xl border-2 border-[var(--border)] bg-[var(--surface-2)] text-[var(--text-strong)] text-[13.5px] placeholder:text-[12px] outline-none transition-all duration-200 box-border focus:border-[var(--primary)] focus:bg-[var(--card)] focus:shadow-[0_0_0_4px_var(--primary-soft)]" />
+              <input v-model="captchaInput" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Tulis jawaban di sini" autocomplete="off" class="w-full h-11 px-3.5 rounded-xl border-2 border-[var(--border)] bg-[var(--surface-2)] text-[var(--text-strong)] text-[13.5px] placeholder:text-[12px] outline-none transition-all duration-200 box-border focus:border-[var(--primary)] focus:bg-[var(--card)] focus:shadow-[0_0_0_4px_var(--primary-soft)]" />
             </div>
 
             <Transition name="fade">
@@ -193,7 +262,7 @@
 
 <script setup>
 import { computed, ref, shallowRef, onMounted, onUnmounted, nextTick } from "vue";
-import { BookOpen, ChevronRight, CircleAlert, GraduationCap, IdCard, Info, LoaderCircle, LockKeyhole, Mars, RotateCcw, Search, SearchCheck, ShieldCheck, ShieldQuestion, UnlockKeyhole, Users, Venus, X, School, ClipboardCheck } from "@/components/Icons.js";
+import { BookOpen, ChevronDown, ChevronRight, CircleAlert, GraduationCap, Hash, IdCard, Info, LoaderCircle, LockKeyhole, Mars, RotateCcw, Search, SearchCheck, ShieldCheck, ShieldQuestion, UnlockKeyhole, Users, Venus, WifiOff, X, School, ClipboardCheck } from "@/components/Icons.js";
 import { useUiStore } from "@/stores/ui";
 import { useSekolahStore } from "@/stores/sekolah";
 import { getPublicSiswa } from "@/services/siswaService";
@@ -203,12 +272,32 @@ import PageLoading from "@/components/PageLoading.vue";
 const ui = useUiStore();
 const sekolahStore = useSekolahStore();
 
+const alurSteps = [
+  "Cari nama peserta didik pada kolom pencarian.",
+  "Pilih murid yang sesuai dari hasil pencarian.",
+  "Verifikasi dengan memasukkan NISN dan jawaban captcha.",
+  "Periksa kembali seluruh data peserta didik.",
+  'Klik "Data Sesuai" untuk konfirmasi.',
+  "Jika ada data keliru, ajukan perbaikan dengan lampiran dokumen.",
+];
+
 const loading = ref(false);
 const networkError = ref(false);
 const keyword = ref("");
 const suggestions = shallowRef([]);
 const searchMessage = ref("");
 const searchFocused = ref(false);
+
+const noActivePeriode = computed(() => sekolahStore.loaded && !sekolahStore.periodeId);
+const searchDisabled = computed(() => networkError.value || noActivePeriode.value);
+
+function onSearchBoxClick() {
+  if (noActivePeriode.value) {
+    ui.warning("Belum ada periode aktif. Silakan hubungi admin sekolah untuk mengaktifkan periode.", "Periode Belum Aktif");
+  } else if (networkError.value) {
+    ui.warning("Tidak dapat menghubungi server. Periksa koneksi Anda lalu coba lagi.", "Koneksi Terputus");
+  }
+}
 
 const showModal = ref(false);
 const selectedSiswa = ref(null);
@@ -232,14 +321,23 @@ const dataSiswa = computed(() =>
 const totalSiswa = ref(0);
 const totalLaki = ref(0);
 const totalPerempuan = ref(0);
+const totalKelasX = ref(0);
+const totalKelasXI = ref(0);
+const totalKelasXII = ref(0);
+
+function kelasDariRombel(rombel) {
+  const m = String(rombel || "").toUpperCase().match(/KELAS\s+(XII|XI|X)\b/);
+  return m ? m[1] : "";
+}
 
 const showResultBox = computed(() => suggestions.value.length > 0 || !!searchMessage.value);
 
-const tahunAjaran = computed(() => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
-  return month >= 7 ? `${year}/${year + 1}` : `${year - 1}/${year}`;
+const tahunAjaran = computed(() => sekolahStore.tahunAjaran);
+
+const semester = computed(() => {
+  const s = String(sekolahStore.semester || "").trim();
+  if (!s) return "";
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 });
 
 function animateValue(targetRef, endValue, duration = 5000) {
@@ -259,10 +357,22 @@ async function loadDataAwal() {
   let siswaFailed = false;
   try {
     const res = await getPublicSiswa();
-    siswaRaw.value = Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
+    const items = Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
+    siswaRaw.value = items;
     animateValue(totalSiswa, res?.totalItems || 0);
     animateValue(totalLaki, res?.totalLaki || 0);
     animateValue(totalPerempuan, res?.totalPerempuan || 0);
+
+    let kx = 0, kxi = 0, kxii = 0;
+    for (const s of items) {
+      const k = kelasDariRombel(s?.nama_rombel);
+      if (k === "X") kx++;
+      else if (k === "XI") kxi++;
+      else if (k === "XII") kxii++;
+    }
+    animateValue(totalKelasX, kx);
+    animateValue(totalKelasXI, kxi);
+    animateValue(totalKelasXII, kxii);
   } catch (err) {
     console.error("Gagal mengambil data siswa:", err);
     siswaRaw.value = [];
@@ -297,7 +407,7 @@ function searchSiswa() {
     if (item._searchText.includes(key)) { result.push(item); if (result.length >= 6) break; }
   }
   suggestions.value = result;
-  if (!result.length) searchMessage.value = "Data siswa tidak ditemukan.";
+  if (!result.length) searchMessage.value = "Data murid tidak ditemukan.";
 }
 
 function resetSearch() {
@@ -333,15 +443,15 @@ function closeVerifyModal() {
 
 async function verifyStudent() {
   verifyError.value = "";
-  if (!selectedSiswa.value) { verifyError.value = "Siswa belum dipilih."; return; }
+  if (!selectedSiswa.value) { verifyError.value = "Murid belum dipilih."; return; }
   const nisnInputClean = String(nisnInput.value || "").trim();
   const nisnSiswaClean = String(selectedSiswa.value.nisn || "").trim();
   if (!nisnInputClean) { verifyError.value = "NISN wajib diisi."; return; }
-  if (!nisnSiswaClean) { verifyError.value = "Data siswa ini belum memiliki NISN."; return; }
+  if (!nisnSiswaClean) { verifyError.value = "Data murid ini belum memiliki NISN."; return; }
   if (nisnInputClean !== nisnSiswaClean) { verifyError.value = "NISN tidak sesuai."; return; }
   if (Number(captchaInput.value) !== captcha.value.a + captcha.value.b) { verifyError.value = "Jawaban captcha salah."; makeCaptcha(); captchaInput.value = ""; return; }
   const siswaId = selectedSiswa.value.id || selectedSiswa.value.nisn || selectedSiswa.value._key;
-  if (!siswaId) { verifyError.value = "ID siswa tidak ditemukan."; return; }
+  if (!siswaId) { verifyError.value = "ID murid tidak ditemukan."; return; }
   const idClean = String(siswaId);
   localStorage.setItem("detail_siswa_id", idClean);
   localStorage.setItem("detail_siswa_nisn", nisnSiswaClean);

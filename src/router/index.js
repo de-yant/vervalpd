@@ -18,18 +18,19 @@ const routes = [
   {
     path: "/error",
     name: "Error",
-    component: () => import("@/views/error/ErrorPage.vue"),
+    component: () => import("@/views/error/error.vue"),
     props: (route) => ({
       code: route.query.code || "500",
-      title: route.query.title || "Terjadi Kesalahan",
-      description: route.query.description || "Maaf, terjadi kesalahan pada server. Silakan coba kembali beberapa saat lagi.",
+      title: route.query.title || "",
+      description: route.query.description || "",
     }),
   },
 
   {
     path: "/:pathMatch(.*)*",
     name: "NotFound",
-    component: () => import("@/views/error/NotFoundPage.vue"),
+    component: () => import("@/views/error/error.vue"),
+    props: { code: "404", title: "", description: "" },
   },
 ];
 

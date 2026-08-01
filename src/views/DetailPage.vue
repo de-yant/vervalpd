@@ -3,17 +3,6 @@
     <!-- ── LOADING ── -->
     <PageLoading v-if="loading" />
 
-    <!-- ── ERROR ── -->
-    <div v-else-if="error" class="state-card state-card--error">
-      <div class="state-icon state-icon--error">
-        <CircleAlert :size="24" />
-      </div>
-      <div>
-        <h2>{{ error }}</h2>
-        <p>Data tidak ditemukan atau gagal dimuat.</p>
-      </div>
-    </div>
-
     <!-- ── CONTENT ── -->
     <template v-else-if="siswa">
       <!-- PAGE HEADER — konsisten dengan admin -->
@@ -72,7 +61,7 @@
           <div class="card-head">
             <div class="card-head-icon"><UserRound :size="15" /></div>
             <div>
-              <h3>Identitas Siswa</h3>
+              <h3>Identitas Murid</h3>
               <p>Data utama peserta didik.</p>
             </div>
           </div>
@@ -438,7 +427,6 @@ const sekolahStore = useSekolahStore();
 const loading = ref(true);
 const submitting = ref(false);
 const uploadProgress = ref(0);
-const error = ref("");
 const siswa = ref(null);
 const verificationStatus = ref("sesuai");
 const submitLock = ref({ type: "", expiredAt: null });
@@ -595,25 +583,39 @@ onMounted(() => {
 async function loadSiswa() {
   try {
     loading.value = true;
-    error.value = "";
     siswa.value = null;
     const id = route.params.id;
     if (!id) {
-      error.value = "ID siswa tidak ditemukan di URL.";
+      router.replace({
+        path: "/error",
+        query: { code: "400", title: "ID tidak valid", description: "ID murid tidak ditemukan di URL." },
+      });
       return;
     }
     const data = await getPublicDetailSiswa(id);
     siswa.value = data;
     if (!siswa.value) {
-      error.value = "Data siswa tidak ditemukan.";
+      router.replace({
+        path: "/error",
+        query: { code: "404", title: "Data Tidak Ditemukan", description: "Data murid tidak ditemukan." },
+      });
       return;
     }
     await loadStatusPengajuan();
   } catch (err) {
-    if (err.code === "ERR_NETWORK") error.value = "Server backend tidak aktif.";
-    else if (err.response?.status === 404)
-      error.value = "Data siswa tidak ditemukan.";
-    else error.value = "Gagal memuat data siswa.";
+    let title = "Terjadi Kesalahan";
+    let description = "Gagal memuat data murid. Silakan coba beberapa saat lagi.";
+    let code = "500";
+    if (err.code === "ERR_NETWORK") {
+      title = "Koneksi Terputus";
+      description = "Server backend tidak aktif. Periksa koneksi lalu coba lagi.";
+      code = "503";
+    } else if (err.response?.status === 404) {
+      title = "Data Tidak Ditemukan";
+      description = "Data murid tidak ditemukan.";
+      code = "404";
+    }
+    router.replace({ path: "/error", query: { code, title, description } });
   } finally {
     loading.value = false;
   }
@@ -676,102 +678,71 @@ function buatPernyataan() {
 <head><meta charset="UTF-8"><title>Pernyataan Kebenaran Data</title>
 <style>
   @page { margin: 2cm 2.5cm; }
-  body { font-family: 'Times New Roman', Times, serif; color: #111827; margin: 0; padding: 0; font-size: 12pt; line-height: 1.5; }
-  h3 { text-align: center; font-size: 14pt; font-weight: bold; margin: 0 0 4px; }
-  .sub { text-align: center; font-size: 12pt; font-weight: bold; margin-bottom: 16px; }
-  p.body-text { text-align: justify; margin-bottom: 12pt; }
-  table.data { width: 100%; border: none; margin-bottom: 16px; }
-  table.data td { padding: 2px 4px; border: none; vertical-align: top; }
-  table.data td.lbl { width: 200px; white-space: nowrap; }
-  table.data td.colon { width: 16px; text-align: center; }
-  .pilihan { margin: 12px 0; display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
-  .pilihan label { display: inline-flex; align-items: center; gap: 6px; font-size: 12pt; }
-  .check-box { display: inline-block; width: 16px; height: 16px; border: 2px solid #000; flex-shrink: 0; margin-top: 10px; }
-  .catatan { margin-top: 16px; }
-  .catatan p { margin: 2px 0; }
-  .catatan ol { padding-left: 20px; margin: 4px 0; }
-  .ttd { margin-top: 28px; }
+  body { font-family: 'Times New Roman', Times, serif; color: #111827; margin: 0; padding: 2cm 2.5cm; font-size: 12pt; line-height: 1.5; }
+  h2 { text-align: center; font-size: 14pt; font-weight: bold; margin: 0 0 4px; text-transform: uppercase; }
+  h3 { text-align: center; font-size: 12pt; font-weight: bold; margin: 0 0 16px; text-transform: uppercase; }
+  p { text-align: justify; margin-bottom: 12pt; }
+  table.data { width: 70%; margin: 16px auto; border-collapse: collapse; }
+  table.data td { padding: 4px 8px; border: none; vertical-align: top; font-family: 'Times New Roman', Times, serif; }
+  table.data td.lbl { width: 1%; white-space: nowrap; padding-right: 12px; font-family: 'Times New Roman', Times, serif; }
+  table.data td.dots { letter-spacing: 2px; text-transform: uppercase; font-family: 'Times New Roman', Times, serif; }
+  .ttd { margin-top: 24px; }
   .ttd table { width: 100%; border: none; }
-  .ttd td { text-align: center; vertical-align: top; padding: 0 20px; }
-  .ttd .space { height: 60px; }
+  .ttd td { text-align: center; vertical-align: top; padding: 0 30px; width: 50%; }
+  .ttd .space { height: 50px; }
   .ttd td p:last-child { text-transform: uppercase; font-weight: bold; }
-  .footer-note { margin-top: 12px; font-size: 10px; }
-  .footer-print { margin-top: 12px; padding-top: 8px; border-top: 1px solid #d1d5db; font-size: 9px; color: #6b7280; text-align: center; clear: both; width: 100%; }
-  hr { border: none; border-top: 1px solid #000; margin: 8px 0; }
+  .footer-note { margin-top: 20px; font-size: 10pt; text-align: justify; }
 </style></head>
 <body>
-  <h3>SURAT PERNYATAAN KEBENARAN DATA SISWA</h3>
-  <p class="sub">UNTUK PENCETAKAN IJAZAH SMK 2 LPPM RI</p>
+  <h2>SURAT PERNYATAAN KESESUAIAN DAN KEBENARAN DATA SISWA</h2>
+  <h3>UNTUK PENCETAKAN IJAZAH SMK 2 LPPM RI</h3>
 
-  <p class="body-text">
-    Berdasarkan Peraturan Menteri Pendidikan Dasar dan Menengah No. 12 Tahun 2025 tentang Validasi data siswa yang telah menyelesaikan pendidikan di sekolah tingkat SMK, yang bertanda tangan di bawah ini saya :
-  </p>
+  <p>Berdasarkan Peraturan Menteri Pendidikan Dasar dan Menengah Nomor 12 Tahun 2025 tentang Validasi Data Murid yang Telah Menyelesaikan Pendidikan pada Jenjang SMK, saya yang bertanda tangan di bawah ini:</p>
 
   <table class="data">
-    <tr><td class="lbl">Nama</td><td class="colon">:</td><td style="text-transform:uppercase">${nama}</td></tr>
-    <tr><td class="lbl">Tempat/Tanggal Lahir</td><td class="colon">:</td><td>${ttl}</td></tr>
-    <tr><td class="lbl">NISN</td><td class="colon">:</td><td>${getField("nisn")}</td></tr>
-    <tr><td class="lbl">Nama Orang Tua</td><td class="colon"></td><td></td></tr>
-    <tr><td class="lbl" style="padding-left:20px;">a. Ayah</td><td class="colon">:</td><td>${getField("nama_ayah")}</td></tr>
-    <tr><td class="lbl" style="padding-left:20px;">b. Ibu</td><td class="colon">:</td><td>${getField("nama_ibu")}</td></tr>
-    <tr><td class="lbl">Jurusan/Program Studi</td><td class="colon">:</td><td>${getField("nama_rombel")}</td></tr>
-    <tr><td class="lbl">Satuan Pendidikan</td><td class="colon">:</td><td>${sekolahStore.nama || "SMK 2 LPPM RI MAJALAYA"}</td></tr>
-    <tr><td class="lbl">NPSN</td><td class="colon">:</td><td>${sekolahStore.npsn || "20228539"}</td></tr>
-    <tr><td class="lbl">Provinsi</td><td class="colon">:</td><td>${getField("provinsi")}</td></tr>
-    <tr><td class="lbl">Kabupaten/Kota</td><td class="colon">:</td><td>${getField("kabupaten_kota")}</td></tr>
+    <tr><td class="lbl">Nama</td><td>:</td><td class="dots">${nama}</td></tr>
+    <tr><td class="lbl">Tempat/Tanggal Lahir</td><td>:</td><td class="dots">${ttl}</td></tr>
+    <tr><td class="lbl">NISN</td><td>:</td><td class="dots">${getField("nisn")}</td></tr>
+    <tr><td class="lbl">Nama Ayah</td><td>:</td><td class="dots">${getField("nama_ayah") || "..........................."}</td></tr>
+    <tr><td class="lbl">Nama Ibu</td><td>:</td><td class="dots">${getField("nama_ibu") || "..........................."}</td></tr>
+    <tr><td class="lbl">Konsentrasi Keahlian/Jurusan</td><td>:</td><td class="dots">${getField("nama_rombel")}</td></tr>
+    <tr><td class="lbl">Satuan Pendidikan</td><td>:</td><td class="dots">SMK 2 LPPM RI MAJALAYA</td></tr>
+    <tr><td class="lbl">NPSN</td><td>:</td><td class="dots">20228539</td></tr>
+    <tr><td class="lbl">Kabupaten/Kota</td><td>:</td><td class="dots">${getField("kabupaten_kota") || "Kabupaten Bandung"}</td></tr>
+    <tr><td class="lbl">Provinsi</td><td>:</td><td class="dots">${getField("provinsi") || "Jawa Barat"}</td></tr>
   </table>
 
-  <p class="body-text">Apakah Data diatas sudah Sesuai :</p>
-  <div class="pilihan">
-    <label><span class="check-box"></span> Sesuai</label>
-    <label><span class="check-box"></span> Tidak Sesuai</label>
-    <span style="font-size:10px;color:#6b7280;font-style:italic; margin-top:4px;">(Pilih salah satu dengan memberi tanda centang)</span>
-  </div>
+  <p>Dengan ini menyatakan bahwa <strong>seluruh data identitas yang tercantum di atas telah sesuai, benar, dan valid</strong> berdasarkan dokumen resmi yang saya miliki, yaitu Kartu Keluarga (KK), Akta Kelahiran, Nomor Induk Murid Nasional (NISN), serta dokumen kependudukan lainnya yang berlaku.</p>
 
-  <p class="body-text">
-    <strong>*) Jika memilih Sesuai</strong><br>
-    Dengan ini menyatakan bahwa data tersebut di atas telah sesuai dengan Data Pribadi saya berdasarkan Kartu Keluarga (KK), NISN, dan Akte Kelahiran. Saya menyetujui bahwa data untuk ijazah di SMK 2 LPPM RI akan disesuaikan dengan data tersebut.
-  </p>
+  <p>Saya menyetujui bahwa data tersebut akan dijadikan sebagai <strong>dasar penerbitan dan pencetakan Ijazah SMK 2 LPPM RI</strong>. Apabila di kemudian hari ditemukan adanya ketidaksesuaian data yang disebabkan oleh kelalaian atau kesalahan dari saya, maka saya bersedia bertanggung jawab sepenuhnya dan mengikuti prosedur perbaikan sesuai dengan ketentuan yang berlaku.</p>
 
-  <p class="body-text">
-    <strong>*) Jika memilih Tidak Sesuai</strong><br>
-    Silahkan untuk menyiapkan data-data sebagai berikut :
-  </p>
-  <div class="catatan">
-    <p>1. Foto copy Kartu Keluarga (KK) yang sudah diperbarui (terbaru).</p>
-    <p>2. Foto copy Ijazah SMP/MTs.</p>
-    <p>3. Foto copy Akte Kelahiran yang dikeluarkan oleh Disdukcapil.</p>
-        <p style="font-size:10px;color:#6b7280;font-style:italic;">(Seluruh data tersebut harus disiapkan dan dikirimkan ke Sekolah SMK 2 LPPM RI Majalaya (Bandung) dibawa langsung oleh siswa yang bersangkutan ke OPS Sekolah)</p>
-  </div>
-
-  <p class="body-text">
-    Demikian surat pernyataan ini saya buat dengan sebenar-benarnya tanpa unsur paksaan dari pihak manapun. Saya bersedia bertanggung jawab atas kebenaran data tersebut dan akan mengikuti seluruh rangkaian ujian dengan penuh INTEGRITAS.
-  </p>
+  <p>Demikian surat pernyataan ini saya buat dengan sebenar-benarnya, dalam keadaan sadar, tanpa adanya paksaan dari pihak mana pun, untuk dipergunakan sebagaimana mestinya.</p>
 
   <div class="ttd">
     <table>
       <tr>
         <td>
           <p>Mengetahui,</p>
-          <p>Orang Tua/Wali Murid</p>
+          <p><strong>Orang Tua/Wali</strong></p>
+          <p style="font-size:10pt;margin:4px 0;">&nbsp;</p>
           <div class="space"></div>
-          <p>${getField("nama_ayah") || getField("nama_ibu") || "____________________"}</p>
+          <p>(${getField("nama_ayah") || getField("nama_ibu") || "................................."})</p>
         </td>
         <td>
-          <p>Bandung, ${tgl}</p>
-          <p>Yang Membuat Pernyataan</p>
-          <div class="space"></div>
-          <p>${nama}</p>
+          <p>${getField("kabupaten_kota") || "Kabupaten Bandung"}, ${tgl}</p>
+          <p><strong>Yang Membuat Pernyataan</strong></p>
+          <div class="space" style="position:relative;">
+            <p style="font-size:10pt;margin:0;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">Materai Rp10.000</p>
+          </div>
+          <p>(${nama})</p>
         </td>
       </tr>
     </table>
   </div>
 
   <div class="footer-note">
-    <p>*) Jika ada kekeliruan pada identitas murid, harap menghubungi Sekolah/Madrasah untuk dilakukan perbaikan sesuai mekanisme yang telah ditetapkan</p>
-    <p>**) Identitas murid pada lembar ini akan dijadikan rujukan dalam pencetakan Ijazah</p>
+    <p><strong>Catatan:</strong> Identitas murid pada surat pernyataan ini akan dijadikan sebagai acuan dalam proses penerbitan dan pencetakan ijazah. Oleh karena itu, murid dan orang tua/wali diharapkan memastikan seluruh data telah sesuai dengan dokumen kependudukan yang sah sebelum menandatangani surat ini.</p>
   </div>
-
 </body></html>`;
 }
 
@@ -779,53 +750,26 @@ async function downloadPernyataan() {
   const nama = getField("nama").replace(/[^a-zA-Z0-9]/g, "_");
   const nisn = getField("nisn");
   const html = buatPernyataan();
-  const el = document.createElement("div");
-  el.innerHTML = html;
-  el.style.position = "fixed";
-  el.style.left = "0";
-  el.style.top = "0";
-  el.style.width = "794px";
-  el.style.background = "#fff";
-  el.style.zIndex = "-1";
-  document.body.appendChild(el);
-  await new Promise(r => setTimeout(r, 300));
-  try {
-    const canvas = await html2canvas(el, { scale: 2, useCORS: true, width: 794 });
-    const imgData = canvas.toDataURL("image/jpeg", 0.95);
-    const pdf = new jsPDF("p", "mm", "a4");
-    const mLR = 25;
-    const mTB = 20;
-    const pageW = pdf.internal.pageSize.getWidth() - mLR * 2;
-    const imgH = (canvas.height * pageW) / canvas.width;
-    const pageH = 297 - mTB * 2;
-    let yOffset = 0;
-    let firstPage = true;
-    while (yOffset < imgH) {
-      if (!firstPage) pdf.addPage();
-      pdf.addImage(imgData, "JPEG", mLR, mTB - yOffset, pageW, imgH);
-      yOffset += pageH;
-      firstPage = false;
-    }
-    pdf.save(`Pernyataan_${nama}_${nisn}.pdf`);
-  } catch (e) {
-    console.warn("PDF error:", e);
-    const w = window.open("", "_blank");
-    if (w) {
-      w.document.write(html);
-      w.document.close();
-    } else {
-      const blob = new Blob([html], { type: "text/html" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `Pernyataan_${nama}_${nisn}.html`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
+  previewPernyataan(html, nama, nisn);
+}
+
+function previewPernyataan(html, nama, nisn) {
+  const w = window.open("", "preview_pernyataan", "width=900,height=700,toolbar=1,scrollbars=1");
+  if (w) {
+    w.document.write(html);
+    w.document.close();
+    w.document.title = `Pernyataan_${nama}_${nisn}`;
+  } else {
+    const blob = new Blob([html], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Pernyataan_${nama}_${nisn}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
-  document.body.removeChild(el);
 }
 
 function setFile(event, key) {
@@ -854,7 +798,6 @@ async function submitSesuai() {
       pesan: "Saya menyatakan data ini sesuai dan selesai.",
     });
     lockSubmitFor30Days("KONFIRMASI");
-    downloadPernyataan();
     clearForm();
     submissionStatus.value = { type: "success", message: "Data berhasil dikonfirmasi" };
   } catch (err) {

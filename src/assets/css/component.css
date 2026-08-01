@@ -401,9 +401,9 @@
 
 @media (max-width: 640px) {
   .app-toast-stack {
-    top: auto;
+    top: 18px;
     right: 12px;
-    bottom: 88px;
+    bottom: auto;
     left: 12px;
     width: auto;
   }

@@ -101,10 +101,9 @@ A public-facing portal that allows parents, guardians, or school staff to search
    cp .env.example .env
    ```
    
-   Edit `.env` with your backend URLs:
+   Edit `.env` with your backend URL:
    ```env
    VITE_API_URL=http://localhost:3001
-   VITE_PB_URL=http://localhost:8090
    ```
 
 4. **Start development server**
