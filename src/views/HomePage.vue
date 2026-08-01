@@ -21,9 +21,9 @@
         <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-lg p-5 sm:p-7 relative z-10 flex flex-col order-last md:order-none">
             <div class="flex items-center justify-between gap-3 pb-2 border-b border-[var(--border)] mb-4">
               <div class="flex items-center gap-3 min-w-0">
-                <div class="w-12 h-12 rounded-xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-lg flex-shrink-0"><ClipboardCheck :size="22" /></div>
+                <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white flex-shrink-0"><ClipboardCheck :size="22" /></div>
                 <div>
-                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
+                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary)]/10 text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
                     <ShieldCheck :size="7" />
                     Panduan
                   </div>
@@ -34,8 +34,8 @@
             </div>
           <div class="flex-1 flex flex-col">
             <div v-for="(step, i) in alurSteps" :key="i" class="flex flex-col items-center">
-              <div class="w-full flex items-center gap-3 p-3 rounded-xl lg:gap-2.5 lg:p-2.5 border border-[var(--border)] bg-[var(--surface-2)] shadow-sm">
-                <span class="w-8 h-8 rounded-full grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white text-[12px] font-black shrink-0 shadow-md lg:w-7 lg:h-7 lg:text-[11px]">{{ i + 1 }}</span>
+              <div class="w-full flex items-center gap-3 p-3 rounded-xl lg:gap-2.5 lg:p-2.5 border border-[var(--border)] bg-[var(--surface-2)]">
+                <span class="w-8 h-8 rounded-full grid place-items-center bg-[var(--primary)] text-white text-[12px] font-black shrink-0 lg:w-7 lg:h-7 lg:text-[11px]">{{ i + 1 }}</span>
                 <span class="flex-1 min-w-0 text-[12.5px] font-bold text-[var(--text)] leading-snug lg:text-[12px]">{{ step }}</span>
               </div>
               <div v-if="i < alurSteps.length - 1" class="my-1 text-[var(--primary)] lg:my-0.5">
@@ -49,7 +49,7 @@
         <div class="flex flex-col gap-4 md:gap-6 min-w-0">
           <!-- SEARCH -->
           <div id="search-card" class="w-full flex flex-col">
-        <div class="flex-1 rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-lg p-5 sm:p-7 search-card-inner">
+        <div class="flex-1 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 sm:p-7 search-card-inner">
           <div v-if="loading" class="flex items-center justify-center gap-3 min-h-[120px] rounded-xl bg-[var(--surface-2)] text-[var(--muted)] text-[14px] font-bold">
             <div class="w-9 h-9 rounded-xl bg-[var(--primary-soft)] grid place-items-center text-[var(--primary)]"><LoaderCircle class="animate-spin" :size="18" /></div>
             <span>Memuat data murid...</span>
@@ -58,9 +58,9 @@
           <div v-else class="flex flex-col justify-center gap-4">
             <div class="flex items-center justify-between gap-3 pb-2 border-b border-[var(--border)]">
               <div class="flex items-center gap-3 min-w-0">
-                <div class="w-12 h-12 rounded-xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-lg flex-shrink-0"><SearchCheck :size="22" /></div>
+                <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white shadow-lg flex-shrink-0"><SearchCheck :size="22" /></div>
                 <div class="min-w-0">
-                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
+                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary)]/10 text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
                     <ShieldCheck :size="7" />
                     VervalPD
                   </div>
@@ -90,7 +90,7 @@
               <Transition name="dropdown">
                 <div v-if="showResultBox" class="absolute left-0 right-0 top-full mt-2 z-[9999] max-h-[260px] overflow-y-auto p-2 rounded-2xl bg-[var(--card)] border border-[var(--border)] shadow-xl">
                   <button v-for="(item, idx) in suggestions" :key="item._key" type="button" class="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl border-0 bg-transparent text-left text-[var(--text-strong)] hover:bg-[var(--primary-soft)] hover:translate-x-1 transition-all duration-180" :style="{ animationDelay: `${idx * 40}ms` }" @click="openVerifyModal(item)">
-                    <span class="w-10 h-10 rounded-xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white text-[12px] font-black shrink-0">{{ getInitial(item.nama) }}</span>
+                    <span class="w-10 h-10 rounded-xl grid place-items-center bg-[var(--primary)] text-white text-[12px] font-black shrink-0">{{ getInitial(item.nama) }}</span>
                     <span class="flex-1 min-w-0 grid gap-0.5">
                       <strong class="block text-[13px] font-black text-[var(--text-strong)] truncate">{{ item.nama }}</strong>
                       <small class="inline-flex items-center gap-1 text-[11.5px] text-[var(--muted)]"><BookOpen :size="11" /> {{ item.nama_rombel || "Belum ada rombel" }}</small>
@@ -104,11 +104,11 @@
 
             <!-- TAHUN AJARAN -->
             <div class="flex items-center justify-center gap-1.5 flex-wrap pt-3 border-t border-[var(--border)]">
-              <div v-if="tahunAjaran" class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[11.5px] font-black text-[var(--primary)]">
+              <div v-if="tahunAjaran" class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--primary)]/10 text-[11.5px] font-black text-[var(--primary)]">
                 <GraduationCap :size="11" />
                 <span>Tahun Ajaran {{ tahunAjaran }}</span>
               </div>
-              <div v-if="semester" class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[11.5px] font-black text-[var(--primary)]">
+              <div v-if="semester" class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--primary)]/10 text-[11.5px] font-black text-[var(--primary)]">
                 <BookOpen :size="11" />
                 <span>Semester {{ semester }}</span>
               </div>
@@ -120,9 +120,9 @@
           <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-lg p-5 sm:p-7 flex flex-col">
             <div class="flex items-center justify-between gap-3 pb-2 border-b border-[var(--border)] mb-4">
               <div class="flex items-center gap-3 min-w-0">
-                <div class="w-12 h-12 rounded-xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-lg flex-shrink-0"><Users :size="22" /></div>
+                <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white shadow-lg flex-shrink-0"><Users :size="22" /></div>
                 <div>
-                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
+                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary)]/10 text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
                     <ShieldCheck :size="7" />
                     Statistik
                   </div>
@@ -134,7 +134,7 @@
 
             <div class="grid grid-cols-3 stats-grid gap-2">
               <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-250 stat-card">
-                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-md stat-icon-wrap">
+                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-[var(--primary)] text-white stat-icon-wrap">
                   <Users :size="14" />
                 </div>
                 <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
@@ -143,7 +143,7 @@
                 </div>
               </div>
               <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-250 stat-card">
-                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#2563eb] to-[#3b82f6] text-white shadow-md stat-icon-wrap">
+                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-[#2563eb] text-white stat-icon-wrap">
                   <Mars :size="14" />
                 </div>
                 <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
@@ -152,7 +152,7 @@
                 </div>
               </div>
               <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-250 stat-card">
-                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#db2777] to-[#ec4899] text-white shadow-md stat-icon-wrap">
+                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-[#db2777] text-white stat-icon-wrap">
                   <Venus :size="14" />
                 </div>
                 <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
@@ -161,7 +161,7 @@
                 </div>
               </div>
               <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-250 stat-card">
-                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#16a34a] to-[#22c55e] text-white shadow-md stat-icon-wrap">
+                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-[#16a34a] text-white stat-icon-wrap">
                   <GraduationCap :size="14" />
                 </div>
                 <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
@@ -170,7 +170,7 @@
                 </div>
               </div>
               <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-250 stat-card">
-                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#eab308] to-[#facc15] text-white shadow-md stat-icon-wrap">
+                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-[#eab308] text-white stat-icon-wrap">
                   <GraduationCap :size="14" />
                 </div>
                 <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
@@ -179,7 +179,7 @@
                 </div>
               </div>
               <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-250 stat-card">
-                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-gradient-to-br from-[#dc2626] to-[#ef4444] text-white shadow-md stat-icon-wrap">
+                <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-[#dc2626] text-white stat-icon-wrap">
                   <GraduationCap :size="14" />
                 </div>
                 <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
@@ -195,14 +195,14 @@
 
     <!-- LINKS -->
     <section class="links-section w-full max-w-4xl mx-auto overflow-x-hidden">
-      <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-lg p-6 sm:p-8 links-card-inner relative z-10">
+      <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 sm:p-8 links-card-inner relative z-10">
         <div class="flex items-center justify-center gap-2.5 mb-5 pb-4 border-b border-[var(--border)]">
           <GraduationCap :size="14" class="text-[var(--primary)]" />
           <span class="text-[10px] font-black tracking-[0.1em] uppercase text-[var(--muted)]">Aplikasi Lainnya</span>
         </div>
 
         <div ref="trackRef" class="flex gap-3 overflow-x-auto" style="scrollbar-width: none; -ms-overflow-style: none;" @mouseenter="pauseScroll" @mouseleave="resumeScroll">
-          <a v-for="(link, i) in [...links, ...links, ...links]" :key="i" :href="link.url" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2.5 h-[42px] px-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] text-[var(--text)] text-[13px] font-black hover:bg-[var(--primary-soft)] hover:border-[var(--primary)] hover:text-[var(--primary)] hover:-translate-y-0.5 transition-all duration-250 shrink-0">
+          <a v-for="(link, i) in [...links, ...links, ...links]" :key="i" :href="link.url" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2.5 h-[42px] px-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] text-[var(--text)] text-[13px] font-black hover:bg-[var(--primary)]/10 hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all duration-250 shrink-0">
             <span class="text-[var(--muted)] w-5 h-5 grid place-items-center">
               <School v-if="link.icon === 'school'" :size="16" />
               <ClipboardCheck v-else-if="link.icon === 'clipboard'" :size="16" />
@@ -217,11 +217,11 @@
     <!-- VERIFY MODAL -->
     <Transition name="modal-fade">
       <div v-if="showModal" class="fixed inset-0 z-[99999] grid place-items-center p-4 bg-black/75" @click.self="closeVerifyModal">
-        <div class="relative w-full max-w-[420px] rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-2xl p-6 sm:p-7">
+        <div class="relative w-full max-w-[420px] rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 sm:p-7">
           <button type="button" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full border border-[var(--border)] bg-[var(--surface-2)] text-[var(--muted)] grid place-items-center cursor-pointer transition-all duration-200 hover:bg-[var(--primary-soft)] hover:text-[var(--primary)] hover:border-[var(--primary)] hover:rotate-90" @click="closeVerifyModal"><X :size="16" /></button>
 
           <div class="flex items-center gap-3 mb-5 pb-4 border-b border-[var(--border)]">
-            <div class="w-12 h-12 rounded-2xl grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white shadow-lg"><LockKeyhole :size="22" /></div>
+            <div class="w-12 h-12 rounded-2xl grid place-items-center bg-[var(--primary)] text-white"><LockKeyhole :size="22" /></div>
             <div>
               <p class="m-0 text-[9.5px] font-black tracking-[0.12em] uppercase text-[var(--primary)]">VervalPD App</p>
               <h3 class="m-0 text-[var(--text-strong)] text-[17px] font-black leading-tight" style="margin-top: 2px">Verifikasi Murid</h3>
@@ -230,7 +230,7 @@
 
           <form class="grid gap-4" @submit.prevent="verifyStudent">
             <div class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--surface-2)]">
-              <span class="w-9 h-9 flex-none rounded-lg grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[#0ea5e9] text-white text-[12px] font-black shadow-md">{{ getInitial(selectedSiswa?.nama || "") }}</span>
+              <span class="w-9 h-9 flex-none rounded-lg grid place-items-center bg-[var(--primary)] text-white text-[12px] font-black">{{ getInitial(selectedSiswa?.nama || "") }}</span>
               <div class="flex-1 min-w-0">
                 <strong class="block text-[var(--text-strong)] text-[13px] font-black leading-tight truncate">{{ selectedSiswa?.nama }}</strong>
                 <small class="block text-[var(--muted)] text-[11px]">{{ selectedSiswa?.nama_rombel || "Belum ada rombel" }}</small>
@@ -239,19 +239,19 @@
 
             <div class="grid gap-1.5">
               <label class="inline-flex items-center gap-1.5 text-[var(--text)] text-[12.5px] font-black"><IdCard :size="14" /> NISN Murid</label>
-              <input v-model="nisnInput" type="text" placeholder="Masukkan NISN" autocomplete="off" class="w-full h-11 px-3.5 rounded-xl border-2 border-[var(--border)] bg-[var(--surface-2)] text-[var(--text-strong)] text-[13.5px] placeholder:text-[12px] outline-none transition-all duration-200 box-border focus:border-[var(--primary)] focus:bg-[var(--card)] focus:shadow-[0_0_0_4px_var(--primary-soft)]" />
+              <input v-model="nisnInput" type="text" placeholder="Masukkan NISN" autocomplete="off" class="w-full h-11 px-3.5 rounded-xl border-2 border-[var(--border)] bg-[var(--surface-2)] text-[var(--text-strong)] text-[13.5px] placeholder:text-[12px] outline-none transition-all duration-200 box-border focus:border-[var(--primary)] focus:bg-[var(--card)]" />
             </div>
 
             <div class="grid gap-1.5">
               <label class="inline-flex items-center gap-1.5 text-[var(--text)] text-[12.5px] font-black"><ShieldQuestion :size="14" /> Captcha: berapa {{ captcha?.a }} + {{ captcha?.b }}?</label>
-              <input v-model="captchaInput" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Tulis jawaban di sini" autocomplete="off" class="w-full h-11 px-3.5 rounded-xl border-2 border-[var(--border)] bg-[var(--surface-2)] text-[var(--text-strong)] text-[13.5px] placeholder:text-[12px] outline-none transition-all duration-200 box-border focus:border-[var(--primary)] focus:bg-[var(--card)] focus:shadow-[0_0_0_4px_var(--primary-soft)]" />
+              <input v-model="captchaInput" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="Tulis jawaban di sini" autocomplete="off" class="w-full h-11 px-3.5 rounded-xl border-2 border-[var(--border)] bg-[var(--surface-2)] text-[var(--text-strong)] text-[13.5px] placeholder:text-[12px] outline-none transition-all duration-200 box-border focus:border-[var(--primary)] focus:bg-[var(--card)]" />
             </div>
 
             <Transition name="fade">
               <div v-if="verifyError" class="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-[var(--danger-soft)] border border-[var(--danger)] text-[var(--danger)] text-[12.5px] font-bold"><CircleAlert :size="15" /> <span>{{ verifyError }}</span></div>
             </Transition>
 
-            <button type="submit" class="w-full h-[46px] rounded-xl border-0 inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--primary)] to-[#0ea5e9] text-white text-[14px] font-black cursor-pointer shadow-lg hover:shadow-xl active:translate-y-0"><UnlockKeyhole :size="17" class="vm-btn-icon" /> Buka Data Verval</button>
+            <button type="submit" class="w-full h-[46px] rounded-xl border-0 inline-flex items-center justify-center gap-2 bg-[var(--primary)] text-white text-[14px] font-black cursor-pointer active:translate-y-0"><UnlockKeyhole :size="17" class="vm-btn-icon" /> Buka Data Verval</button>
           </form>
         </div>
       </div>
@@ -341,12 +341,13 @@ const semester = computed(() => {
 });
 
 function animateValue(targetRef, endValue, duration = 5000) {
-  let startValue = 0;
-  const increment = Math.ceil(endValue / (duration / 16));
+  const maxValue = Math.max(endValue, 1);
+  const increment = maxValue / (duration / 16);
+  let current = 0;
   const timer = setInterval(() => {
-    startValue += increment;
-    if (startValue >= endValue) { targetRef.value = endValue; clearInterval(timer); }
-    else { targetRef.value = startValue; }
+    current += increment;
+    if (current >= endValue) { targetRef.value = endValue; clearInterval(timer); }
+    else { targetRef.value = Math.round(current); }
   }, 16);
 }
 

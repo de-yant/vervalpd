@@ -843,11 +843,12 @@ async function submitSesuai() {
     });
     lockSubmitFor30Days("KONFIRMASI");
     clearForm();
-    submissionStatus.value = { type: "success", message: "Data berhasil dikonfirmasi" };
+    ui.success("Data berhasil dikonfirmasi");
+    await loadStatusPengajuan();
   } catch (err) {
     const msg =
       err.response?.data?.message || "Gagal mengirim konfirmasi data.";
-    submissionStatus.value = { type: "error", message: msg };
+    ui.error(msg);
   } finally {
     submitting.value = false;
   }
@@ -875,11 +876,12 @@ async function submitPerbaikan() {
     });
     lockSubmitFor30Days("PERBAIKAN");
     clearForm();
-    submissionStatus.value = { type: "success", message: "Pengajuan perbaikan berhasil dikirim" };
+    ui.success("Pengajuan perbaikan berhasil dikirim");
+    await loadStatusPengajuan();
   } catch (err) {
     const msg =
       err.response?.data?.message || "Pengajuan perbaikan gagal dikirim.";
-    submissionStatus.value = { type: "error", message: msg };
+    ui.error(msg);
   } finally {
     submitting.value = false;
   }

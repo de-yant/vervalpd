@@ -9,7 +9,6 @@
   place-items: center;
   padding: 18px;
   background: rgba(2, 6, 23, 0.62);
-  backdrop-filter: blur(12px);
 }
 
 .app-modal-card {
@@ -17,14 +16,7 @@
   width: min(430px, 100%);
   padding: 26px 24px 22px;
   border-radius: 28px;
-  background:
-    radial-gradient(
-      circle at top right,
-      rgba(47, 99, 244, 0.12),
-      transparent 12rem
-    ),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
-    var(--card);
+  background: var(--card);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-card);
   text-align: center;
@@ -292,7 +284,6 @@
   box-shadow:
     0 20px 50px rgba(15, 23, 42, 0.18),
     0 6px 20px rgba(15, 23, 42, 0.08);
-  backdrop-filter: blur(12px);
   pointer-events: auto;
 }
 
@@ -518,7 +509,7 @@
 .pl-progress-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--primary, #2563eb), #0ea5e9);
+  background: var(--primary, #2563eb);
   transition: width 0.3s ease;
 }
 
@@ -731,9 +722,8 @@
   border-radius: 12px;
   display: grid;
   place-items: center;
-  background: linear-gradient(135deg, var(--primary) 0%, #0ea5e9 100%);
+  background: var(--primary);
   color: #fff;
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
   cursor: pointer;
   transition: all 0.2s ease;
 }
