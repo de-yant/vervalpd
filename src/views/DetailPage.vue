@@ -209,7 +209,7 @@
         </div>
 
         <!-- Review result -->
-        <div v-if="submitLock.reviewedBy || submitLock.catatanAdmin || submitLock.status" class="review-card">
+        <div v-if="submitLock.type === 'PERBAIKAN' && (submitLock.reviewedBy || submitLock.catatanAdmin || submitLock.status)" class="review-card">
           <div class="review-row">
             <span class="review-label">Status</span>
             <span class="review-badge" :class="`review-badge--${(submitLock.status || '').toLowerCase()}`">
@@ -240,7 +240,7 @@
         </div>
 
         <!-- Choice -->
-        <div v-else class="choice-grid">
+        <div v-else-if="!isLockedSubmit" class="choice-grid">
           <label
             class="choice-item"
             :class="{ 'choice-item--success': verificationStatus === 'sesuai' }"
@@ -655,8 +655,12 @@ async function loadStatusPengajuan() {
   try {
     const res = await api.get(`/api/pengajuan-verval/public/check-status?id=${siswa.value.id}`);
     const data = res.data?.data;
-    if (!data || data.is_locked === false) {
-      submitLock.value = { type: "", expiredAt: null, status: "", pesan: "", reviewedBy: "", reviewedAt: "", catatanAdmin: "" };
+    const stillLocked =
+      data?.is_locked &&
+      data.expired_at_lock &&
+      new Date() < new Date(data.expired_at_lock);
+    if (!stillLocked) {
+      submitLock.value = emptyLock();
       verificationStatus.value = "sesuai";
       return;
     }
@@ -672,8 +676,12 @@ async function loadStatusPengajuan() {
     verificationStatus.value =
       data.tipe === "PERBAIKAN" ? "tidak_sesuai" : "sesuai";
   } catch {
-    submitLock.value = { type: "", expiredAt: null, status: "", pesan: "", reviewedBy: "", reviewedAt: "", catatanAdmin: "" };
+    submitLock.value = emptyLock();
   }
+}
+
+function emptyLock() {
+  return { type: "", expiredAt: null, status: "", pesan: "", reviewedBy: "", reviewedAt: "", catatanAdmin: "" };
 }
 
 /* ── Helpers ── */
@@ -841,11 +849,12 @@ async function submitSesuai() {
       tipe: "KONFIRMASI",
       pesan: "Saya menyatakan data ini sesuai dan selesai.",
     });
-    lockSubmitFor30Days("KONFIRMASI");
     clearForm();
     ui.success("Data berhasil dikonfirmasi");
     await loadStatusPengajuan();
+    lockSubmitFor30Days("KONFIRMASI");
   } catch (err) {
+    applyServerLock(err);
     const msg =
       err.response?.data?.message || "Gagal mengirim konfirmasi data.";
     ui.error(msg);
@@ -879,6 +888,7 @@ async function submitPerbaikan() {
     ui.success("Pengajuan perbaikan berhasil dikirim");
     await loadStatusPengajuan();
   } catch (err) {
+    applyServerLock(err);
     const msg =
       err.response?.data?.message || "Pengajuan perbaikan gagal dikirim.";
     ui.error(msg);
@@ -909,6 +919,20 @@ function lockSubmitFor30Days(type) {
   const expiredAt = new Date();
   expiredAt.setDate(expiredAt.getDate() + 30);
   submitLock.value = { type, expiredAt: expiredAt.toISOString(), status: "", pesan: "", reviewedBy: "", reviewedAt: "", catatanAdmin: "" };
+}
+
+function applyServerLock(err) {
+  const lock = err?.response?.data?.data;
+  if (!lock?.expired_at_lock) return;
+  submitLock.value = {
+    type: lock.tipe || "",
+    expiredAt: lock.expired_at_lock || null,
+    status: lock.status || "",
+    pesan: lock.pesan || "",
+    reviewedBy: lock.reviewed_by || "",
+    reviewedAt: lock.reviewed_at || "",
+    catatanAdmin: lock.catatan_admin || "",
+  };
 }
 
 function showModal(type, title, message) {

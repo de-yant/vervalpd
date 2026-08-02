@@ -23,7 +23,7 @@
               <div class="flex items-center gap-3 min-w-0">
                 <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white flex-shrink-0"><ClipboardCheck :size="22" /></div>
                 <div>
-                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary)]/10 text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
+                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
                     <ShieldCheck :size="7" />
                     Panduan
                   </div>
@@ -60,7 +60,7 @@
               <div class="flex items-center gap-3 min-w-0">
                 <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white shadow-lg flex-shrink-0"><SearchCheck :size="22" /></div>
                 <div class="min-w-0">
-                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary)]/10 text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
+                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
                     <ShieldCheck :size="7" />
                     VervalPD
                   </div>
@@ -104,11 +104,11 @@
 
             <!-- TAHUN AJARAN -->
             <div class="flex items-center justify-center gap-1.5 flex-wrap pt-3 border-t border-[var(--border)]">
-              <div v-if="tahunAjaran" class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--primary)]/10 text-[11.5px] font-black text-[var(--primary)]">
+              <div v-if="tahunAjaran" class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[11.5px] font-black text-[var(--primary)]">
                 <GraduationCap :size="11" />
                 <span>Tahun Ajaran {{ tahunAjaran }}</span>
               </div>
-              <div v-if="semester" class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--primary)]/10 text-[11.5px] font-black text-[var(--primary)]">
+              <div v-if="semester" class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[11.5px] font-black text-[var(--primary)]">
                 <BookOpen :size="11" />
                 <span>Semester {{ semester }}</span>
               </div>
@@ -122,7 +122,7 @@
               <div class="flex items-center gap-3 min-w-0">
                 <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white shadow-lg flex-shrink-0"><Users :size="22" /></div>
                 <div>
-                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary)]/10 text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
+                  <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
                     <ShieldCheck :size="7" />
                     Statistik
                   </div>
@@ -202,7 +202,7 @@
         </div>
 
         <div ref="trackRef" class="flex gap-3 overflow-x-auto" style="scrollbar-width: none; -ms-overflow-style: none;" @mouseenter="pauseScroll" @mouseleave="resumeScroll">
-          <a v-for="(link, i) in [...links, ...links, ...links]" :key="i" :href="link.url" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2.5 h-[42px] px-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] text-[var(--text)] text-[13px] font-black hover:bg-[var(--primary)]/10 hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all duration-250 shrink-0">
+          <a v-for="(link, i) in [...links, ...links, ...links]" :key="i" :href="link.url" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2.5 h-[42px] px-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] text-[var(--text)] text-[13px] font-black hover:bg-[var(--primary-soft)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all duration-250 shrink-0">
             <span class="text-[var(--muted)] w-5 h-5 grid place-items-center">
               <School v-if="link.icon === 'school'" :size="16" />
               <ClipboardCheck v-else-if="link.icon === 'clipboard'" :size="16" />

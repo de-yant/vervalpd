@@ -22,6 +22,7 @@ export {
   Sun,
   Phone,
   RotateCcw,
+  RotateCw,
   School,
   Search,
   SearchCheck,

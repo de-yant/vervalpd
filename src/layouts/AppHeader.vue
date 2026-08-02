@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { GraduationCap, Moon, RotateCcw, Sun } from "@/components/Icons.js";
+import { GraduationCap, Moon, RotateCw, Sun } from "@/components/Icons.js";
 import { useSekolahStore } from "@/stores/sekolah";
 import { useUiStore } from "@/stores/ui";
 
@@ -86,7 +86,7 @@ onMounted(() => {
             :disabled="refreshing"
             @click="handleRefresh"
           >
-            <RotateCcw :size="17" :class="{ spin: refreshing }" />
+            <RotateCw :size="17" :class="{ spin: refreshing }" />
           </button>
 
           <button
