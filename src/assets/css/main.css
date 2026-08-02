@@ -38,6 +38,10 @@
   background: var(--primary-soft);
 }
 
+.stats-grid .stat-card strong {
+  will-change: transform;
+}
+
 .step-indicator--active {
   animation: stepBounce 0.9s ease-in-out infinite;
 }

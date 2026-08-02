@@ -21,7 +21,7 @@
         <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 sm:p-7 relative z-10 flex flex-col order-last md:order-none">
             <div class="flex items-center justify-between gap-3 pb-2 border-b border-[var(--border)] mb-4">
               <div class="flex items-center gap-3 min-w-0">
-                <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white flex-shrink-0"><ClipboardCheck :size="22" /></div>
+                <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white flex-shrink-0 will-change-transform"><ClipboardCheck :size="22" /></div>
                 <div>
                   <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
                     <ShieldCheck :size="7" />
@@ -58,7 +58,7 @@
           <div v-else class="flex flex-col justify-center gap-4">
             <div class="flex items-center justify-between gap-3 pb-2 border-b border-[var(--border)]">
               <div class="flex items-center gap-3 min-w-0">
-                <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white shadow-lg flex-shrink-0"><SearchCheck :size="22" /></div>
+                <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white flex-shrink-0 will-change-transform"><SearchCheck :size="22" /></div>
                 <div class="min-w-0">
                   <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
                     <ShieldCheck :size="7" />
@@ -76,7 +76,6 @@
                   ref="inputRef"
                   v-model="keyword"
                   type="text"
-                  :placeholder="searchPlaceholder"
                   autocomplete="off"
                   :disabled="searchDisabled"
                   class="w-full bg-transparent border-0 outline-none shadow-none text-[14px] text-[var(--text-strong)] placeholder:text-[var(--muted)] py-3 transition-all duration-400 disabled:cursor-not-allowed disabled:pointer-events-none"
@@ -130,7 +129,7 @@
           <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 sm:p-7 flex flex-col">
             <div class="flex items-center justify-between gap-3 pb-2 border-b border-[var(--border)] mb-4">
               <div class="flex items-center gap-3 min-w-0">
-                <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white shadow-lg flex-shrink-0"><Users :size="22" /></div>
+                <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white flex-shrink-0 will-change-transform"><Users :size="22" /></div>
                 <div>
                   <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[var(--primary)] text-[7px] font-black tracking-[0.12em] uppercase mb-1">
                     <ShieldCheck :size="7" />
@@ -314,21 +313,24 @@ function onStepClick(i) {
   activeStep.value = activeStep.value === i ? null : i;
 }
 
-const searchPlaceholder = ref("");
 const placeholderText = "Cari nama kamu disini...";
 let typewriterTimer = null;
+
+function setPlaceholder(text) {
+  if (inputRef.value) inputRef.value.placeholder = text;
+}
 
 function startPlaceholderTypewriter() {
   clearTimeout(typewriterTimer);
   clearInterval(typewriterTimer);
-  searchPlaceholder.value = "";
+  setPlaceholder("");
   let i = 0;
   let deleting = false;
 
   const step = () => {
     if (!deleting) {
       i++;
-      searchPlaceholder.value = placeholderText.slice(0, i);
+      setPlaceholder(placeholderText.slice(0, i));
       if (i >= placeholderText.length) {
         clearInterval(typewriterTimer);
         deleting = true;
@@ -338,7 +340,7 @@ function startPlaceholderTypewriter() {
       }
     } else {
       i--;
-      searchPlaceholder.value = placeholderText.slice(0, i);
+      setPlaceholder(placeholderText.slice(0, i));
       if (i <= 0) {
         clearInterval(typewriterTimer);
         deleting = false;
@@ -355,7 +357,7 @@ function startPlaceholderTypewriter() {
 function stopPlaceholderTypewriter() {
   clearTimeout(typewriterTimer);
   clearInterval(typewriterTimer);
-  searchPlaceholder.value = placeholderText;
+  setPlaceholder(placeholderText);
 }
 
 watch(keyword, (val) => {
@@ -435,11 +437,18 @@ function animateValue(targetRef, endValue) {
   if (maxValue === 0) return;
   const duration = Math.min(10000, Math.max(1000, maxValue * 16));
   const startTime = performance.now();
+  let lastPaint = 0;
   const step = (now) => {
     const progress = Math.min(1, (now - startTime) / duration);
-    targetRef.value = Math.round(maxValue * progress);
-    if (progress < 1) requestAnimationFrame(step);
-    else targetRef.value = maxValue;
+    if (progress >= 1) {
+      targetRef.value = maxValue;
+      return;
+    }
+    if (now - lastPaint >= 33) {
+      lastPaint = now;
+      targetRef.value = Math.round(maxValue * progress);
+    }
+    requestAnimationFrame(step);
   };
   requestAnimationFrame(step);
 }
