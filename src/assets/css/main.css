@@ -26,21 +26,11 @@
 }
 
 .orb-a {
-  width: 600px;
-  height: 600px;
-  top: -200px;
-  right: -180px;
-  background: var(--primary);
-  opacity: 0.06;
+  display: none;
 }
 
 .orb-b {
-  width: 500px;
-  height: 500px;
-  bottom: -150px;
-  left: -150px;
-  background: #0ea5e9;
-  opacity: 0.05;
+  display: none;
 }
 
 .orb-c {
