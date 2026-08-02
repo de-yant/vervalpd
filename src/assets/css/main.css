@@ -687,10 +687,12 @@ h1 {
 
 @media (max-width: 480px) {
   .landing { padding: 16px 10px 18px; gap: 14px; }
+  .landing h2 { font-size: 15px !important; }
+  .alur-step-label { font-size: 12px !important; }
   .stats-grid { gap: 6px; }
   .stats-grid .stat-card { padding: 8px; gap: 6px; }
-  .stats-grid .stat-card strong { font-size: 16px !important; }
-  .stats-grid .stat-card span { font-size: 7.5px !important; }
+  .stats-grid .stat-card strong { font-size: 14px !important; }
+  .stats-grid .stat-card span { font-size: 7px !important; }
   .stats-grid .stat-card .stat-icon-wrap { width: 28px !important; height: 28px !important; }
   .hero-text-main { font-size: clamp(20px, 6vw, 28px) !important; }
   .search-card-inner { padding: 14px !important; }

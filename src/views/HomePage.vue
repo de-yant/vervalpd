@@ -18,7 +18,7 @@
       <!-- ALUR (KIRI) + TITLE/COUNT & SEARCH (KANAN) -->
       <div class="w-full grid gap-4 md:gap-6 md:grid-cols-2 items-stretch col-span-full">
         <!-- ALUR VERVAL -->
-        <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 sm:p-7 relative z-10 flex flex-col order-last md:order-none">
+        <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 sm:p-7 relative z-10 flex flex-col order-last md:order-none">
             <div class="flex items-center justify-between gap-3 pb-2 border-b border-[var(--border)] mb-4">
               <div class="flex items-center gap-3 min-w-0">
                 <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white flex-shrink-0 will-change-transform"><ClipboardCheck :size="22" /></div>
@@ -34,12 +34,12 @@
             </div>
           <div class="flex-1 flex flex-col">
             <div v-for="(step, i) in alurSteps" :key="i" class="flex flex-col items-center">
-              <div class="w-full flex items-center gap-3 p-3 rounded-xl lg:gap-2.5 lg:p-2.5 border border-[var(--border)] bg-[var(--surface-2)] transition-transform duration-250 hover:-translate-y-0.5 hover:shadow-md cursor-pointer" :class="{ 'step-item--active': activeStep === i }" @mouseenter="onStepEnter(i)" @mouseleave="onStepLeave" @click="onStepClick(i)">
-                <span class="w-8 h-8 rounded-full grid place-items-center bg-[var(--primary)] text-white text-[12px] font-black shrink-0 lg:w-7 lg:h-7 lg:text-[11px]">{{ i + 1 }}</span>
-                <span class="flex-1 min-w-0 text-[12.5px] font-bold text-[var(--text)] leading-snug lg:text-[12px]">{{ step }}</span>
+              <div class="w-full flex items-center gap-2 p-2 rounded-xl lg:gap-2.5 lg:p-2.5 border border-[var(--border)] bg-[var(--surface-2)] transition-transform duration-250 hover:-translate-y-0.5 hover:shadow-md cursor-pointer" :class="{ 'step-item--active': activeStep === i }" @mouseenter="onStepEnter(i)" @mouseleave="onStepLeave" @click="onStepClick(i)">
+                <span class="w-7 h-7 rounded-full grid place-items-center bg-[var(--primary)] text-white text-[11px] font-black shrink-0 lg:w-6 lg:h-6 lg:text-[10px]">{{ i + 1 }}</span>
+                <span class="alur-step-label flex-1 min-w-0 text-[12.5px] font-bold text-[var(--text)] leading-snug lg:text-[12px]">{{ step }}</span>
               </div>
-              <div v-if="i < alurSteps.length - 1" class="my-1 text-[var(--primary)] lg:my-0.5" :class="{ 'step-indicator--active': activeStep === i }">
-                <ChevronDown :size="18" class="mx-auto" />
+              <div v-if="i < alurSteps.length - 1" class="my-0.5 text-[var(--primary)]" :class="{ 'step-indicator--active': activeStep === i }">
+                <ChevronDown :size="16" class="mx-auto" />
               </div>
             </div>
           </div>
@@ -78,7 +78,7 @@
                   type="text"
                   autocomplete="off"
                   :disabled="searchDisabled"
-                  class="w-full bg-transparent border-0 outline-none shadow-none text-[14px] text-[var(--text-strong)] placeholder:text-[var(--muted)] py-3 transition-all duration-400 disabled:cursor-not-allowed disabled:pointer-events-none"
+                  class="w-full bg-transparent border-0 outline-none shadow-none text-[13px] sm:text-[14px] text-[var(--text-strong)] placeholder:text-[var(--muted)] py-3 transition-all duration-400 disabled:cursor-not-allowed disabled:pointer-events-none"
                   :class="inputPadClass"
                   @input="onSearchInput"
                   @focus="searchFocused = true; searchSiswa()"
@@ -112,13 +112,13 @@
             </div>
 
             <!-- TAHUN AJARAN -->
-            <div class="flex items-center justify-center gap-1.5 flex-wrap pt-3 border-t border-[var(--border)]">
-              <div v-if="tahunAjaran" class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[11.5px] font-black text-[var(--primary)]">
-                <GraduationCap :size="11" />
+            <div class="grid grid-cols-2 gap-1.5 pt-3 border-t border-[var(--border)] sm:flex sm:items-center sm:justify-center">
+              <div v-if="tahunAjaran" class="flex items-center justify-center gap-1.5 px-2 py-1.5 sm:px-3 rounded-xl sm:rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[11px] sm:text-[11.5px] font-black text-[var(--primary)] min-w-0 text-center">
+                <span class="hidden sm:grid w-4 h-4 place-items-center shrink-0"><GraduationCap :size="12" /></span>
                 <span>Tahun Ajaran {{ tahunAjaran }}</span>
               </div>
-              <div v-if="semester" class="inline-flex items-center gap-1.5 h-[28px] px-3 rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[11.5px] font-black text-[var(--primary)]">
-                <BookOpen :size="11" />
+              <div v-if="semester" class="flex items-center justify-center gap-1.5 px-2 py-1.5 sm:px-3 rounded-xl sm:rounded-full border border-[var(--border)] bg-[var(--primary-soft)] text-[11px] sm:text-[11.5px] font-black text-[var(--primary)] min-w-0 text-center">
+                <span class="hidden sm:grid w-4 h-4 place-items-center shrink-0"><BookOpen :size="12" /></span>
                 <span>Semester {{ semester }}</span>
               </div>
             </div>
@@ -419,7 +419,7 @@ function kelasDariRombel(rombel) {
 const showResultBox = computed(() => suggestions.value.length > 0 || !!searchMessage.value);
 const searchActive = computed(() => searchFocused.value || !!keyword.value || showResultBox.value);
 const inputPadClass = computed(() => {
-  if (!searchActive.value) return "pl-9 pr-3";
+  if (!searchActive.value) return "pl-11 pr-3";
   return keyword.value ? "pl-3 pr-[104px]" : "pl-3 pr-14";
 });
 
