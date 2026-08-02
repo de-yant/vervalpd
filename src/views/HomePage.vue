@@ -18,7 +18,7 @@
       <!-- ALUR (KIRI) + TITLE/COUNT & SEARCH (KANAN) -->
       <div class="w-full grid gap-4 md:gap-6 md:grid-cols-2 items-stretch col-span-full">
         <!-- ALUR VERVAL -->
-        <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-lg p-5 sm:p-7 relative z-10 flex flex-col order-last md:order-none">
+        <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 sm:p-7 relative z-10 flex flex-col order-last md:order-none">
             <div class="flex items-center justify-between gap-3 pb-2 border-b border-[var(--border)] mb-4">
               <div class="flex items-center gap-3 min-w-0">
                 <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white flex-shrink-0"><ClipboardCheck :size="22" /></div>
@@ -34,11 +34,11 @@
             </div>
           <div class="flex-1 flex flex-col">
             <div v-for="(step, i) in alurSteps" :key="i" class="flex flex-col items-center">
-              <div class="w-full flex items-center gap-3 p-3 rounded-xl lg:gap-2.5 lg:p-2.5 border border-[var(--border)] bg-[var(--surface-2)]">
+              <div class="w-full flex items-center gap-3 p-3 rounded-xl lg:gap-2.5 lg:p-2.5 border border-[var(--border)] bg-[var(--surface-2)] transition-transform duration-250 hover:-translate-y-0.5 hover:shadow-md cursor-pointer" :class="{ 'step-item--active': activeStep === i }" @mouseenter="onStepEnter(i)" @mouseleave="onStepLeave" @click="onStepClick(i)">
                 <span class="w-8 h-8 rounded-full grid place-items-center bg-[var(--primary)] text-white text-[12px] font-black shrink-0 lg:w-7 lg:h-7 lg:text-[11px]">{{ i + 1 }}</span>
                 <span class="flex-1 min-w-0 text-[12.5px] font-bold text-[var(--text)] leading-snug lg:text-[12px]">{{ step }}</span>
               </div>
-              <div v-if="i < alurSteps.length - 1" class="my-1 text-[var(--primary)] lg:my-0.5">
+              <div v-if="i < alurSteps.length - 1" class="my-1 text-[var(--primary)] lg:my-0.5" :class="{ 'step-indicator--active': activeStep === i }">
                 <ChevronDown :size="18" class="mx-auto" />
               </div>
             </div>
@@ -71,20 +71,30 @@
             </div>
 
             <div class="relative">
-              <div class="flex items-center gap-3 h-[48px] sm:h-[54px] px-3 sm:px-4 rounded-2xl border-2 border-[var(--border)] bg-[var(--surface-2)] transition-all duration-250 focus-within:border-[var(--primary)] focus-within:bg-[var(--card)] focus-within:shadow-lg" :class="{ 'opacity-50 cursor-not-allowed': searchDisabled }" @click="onSearchBoxClick">
-                <Search :size="18" class="text-[var(--muted)] shrink-0" />
+              <div class="relative flex items-center h-[48px] sm:h-[54px] rounded-2xl border-2 border-[var(--border)] bg-[var(--surface-2)] transition-all duration-250 focus-within:border-[var(--primary)] focus-within:bg-[var(--card)] focus-within:shadow-lg" :class="{ 'opacity-50 cursor-not-allowed': searchDisabled }" @click="onSearchBoxClick">
                 <input
+                  ref="inputRef"
                   v-model="keyword"
                   type="text"
-                  placeholder="Ketik minimal 3 huruf nama peserta didik..."
+                  :placeholder="searchPlaceholder"
                   autocomplete="off"
                   :disabled="searchDisabled"
-                  class="flex-1 min-w-0 bg-transparent border-0 outline-none shadow-none text-[14px] text-[var(--text-strong)] placeholder:text-[var(--muted)] py-3 disabled:cursor-not-allowed disabled:pointer-events-none"
+                  class="w-full bg-transparent border-0 outline-none shadow-none text-[14px] text-[var(--text-strong)] placeholder:text-[var(--muted)] py-3 transition-all duration-400 disabled:cursor-not-allowed disabled:pointer-events-none"
+                  :class="inputPadClass"
                   @input="onSearchInput"
                   @focus="searchFocused = true; searchSiswa()"
                   @blur="searchFocused = false"
                 />
-                <button v-if="keyword" type="button" class="w-9 h-9 rounded-xl grid place-items-center bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] hover:scale-105 transition-all shrink-0" @click="resetSearch" aria-label="Reset pencarian"><X :size="15" /></button>
+                <button v-if="keyword" type="button" class="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl grid place-items-center bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] hover:scale-105 transition-all shrink-0" @mousedown.prevent @click.stop="resetSearch" aria-label="Reset pencarian"><X :size="15" /></button>
+                <button
+                  type="button"
+                  :class="searchActive
+                    ? (keyword ? 'right-14' : 'right-2') + ' w-9 h-9 rounded-xl grid place-items-center bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] hover:scale-105 transition-all shrink-0 absolute top-1/2 -translate-y-1/2'
+                    : 'right-[calc(100%-30px)] text-[var(--primary)] shrink-0 bg-transparent border-0 p-0 absolute top-1/2 -translate-y-1/2 transition-all duration-400'"
+                  :aria-label="searchActive ? 'Cari murid' : 'Cari'"
+                  @mousedown.prevent
+                  @click.stop="onSearchIconClick"
+                ><Search :size="18" /></button>
               </div>
 
               <Transition name="dropdown">
@@ -117,7 +127,7 @@
         </div>
       </div>
           <!-- TITLE + COUNT -->
-          <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-lg p-5 sm:p-7 flex flex-col">
+          <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 sm:p-7 flex flex-col">
             <div class="flex items-center justify-between gap-3 pb-2 border-b border-[var(--border)] mb-4">
               <div class="flex items-center gap-3 min-w-0">
                 <div class="w-12 h-12 rounded-xl grid place-items-center bg-[var(--primary)] text-white shadow-lg flex-shrink-0"><Users :size="22" /></div>
@@ -133,57 +143,57 @@
             </div>
 
             <div class="grid grid-cols-3 stats-grid gap-2">
-              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-250 stat-card">
+              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] transition-transform duration-250 hover:-translate-y-0.5 hover:shadow-md stat-card">
                 <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-[var(--primary)] text-white stat-icon-wrap">
                   <Users :size="14" />
                 </div>
                 <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
-                  <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalSiswa }}</strong>
+                  <strong class="text-[20px] font-black leading-none tabular-nums text-[var(--text-strong)]">{{ totalSiswa }}</strong>
                   <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Peserta Didik</span>
                 </div>
               </div>
-              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-250 stat-card">
+              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] transition-transform duration-250 hover:-translate-y-0.5 hover:shadow-md stat-card">
                 <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-[#2563eb] text-white stat-icon-wrap">
                   <Mars :size="14" />
                 </div>
                 <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
-                  <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalLaki }}</strong>
+                  <strong class="text-[20px] font-black leading-none tabular-nums text-[var(--text-strong)]">{{ totalLaki }}</strong>
                   <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Laki-laki</span>
                 </div>
               </div>
-              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-250 stat-card">
+              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] transition-transform duration-250 hover:-translate-y-0.5 hover:shadow-md stat-card">
                 <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-[#db2777] text-white stat-icon-wrap">
                   <Venus :size="14" />
                 </div>
                 <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
-                  <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalPerempuan }}</strong>
+                  <strong class="text-[20px] font-black leading-none tabular-nums text-[var(--text-strong)]">{{ totalPerempuan }}</strong>
                   <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Perempuan</span>
                 </div>
               </div>
-              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-250 stat-card">
+              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] transition-transform duration-250 hover:-translate-y-0.5 hover:shadow-md stat-card">
                 <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-[#16a34a] text-white stat-icon-wrap">
                   <GraduationCap :size="14" />
                 </div>
                 <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
-                  <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalKelasX }}</strong>
+                  <strong class="text-[20px] font-black leading-none tabular-nums text-[var(--text-strong)]">{{ totalKelasX }}</strong>
                   <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Kelas X</span>
                 </div>
               </div>
-              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-250 stat-card">
+              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] transition-transform duration-250 hover:-translate-y-0.5 hover:shadow-md stat-card">
                 <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-[#eab308] text-white stat-icon-wrap">
                   <GraduationCap :size="14" />
                 </div>
                 <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
-                  <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalKelasXI }}</strong>
+                  <strong class="text-[20px] font-black leading-none tabular-nums text-[var(--text-strong)]">{{ totalKelasXI }}</strong>
                   <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Kelas XI</span>
                 </div>
               </div>
-              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] hover:shadow-md hover:-translate-y-0.5 transition-all duration-250 stat-card">
+              <div class="flex flex-col lg:flex-row items-center lg:items-start justify-center lg:justify-start gap-1.5 lg:gap-3 p-3 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] transition-transform duration-250 hover:-translate-y-0.5 hover:shadow-md stat-card">
                 <div class="w-8 sm:w-10 h-8 sm:h-10 rounded-lg sm:rounded-xl grid place-items-center bg-[#dc2626] text-white stat-icon-wrap">
                   <GraduationCap :size="14" />
                 </div>
                 <div class="flex flex-col items-center lg:items-start justify-center gap-0.5 flex-1 min-w-0 text-center lg:text-left">
-                  <strong class="text-[20px] font-black leading-none text-[var(--text-strong)]">{{ totalKelasXII }}</strong>
+                  <strong class="text-[20px] font-black leading-none tabular-nums text-[var(--text-strong)]">{{ totalKelasXII }}</strong>
                   <span class="text-[9px] font-bold tracking-[0.06em] uppercase text-[var(--muted)]">Kelas XII</span>
                 </div>
               </div>
@@ -216,7 +226,7 @@
 
     <!-- VERIFY MODAL -->
     <Transition name="modal-fade">
-      <div v-if="showModal" class="fixed inset-0 z-[99999] grid place-items-center p-4 bg-black/75" @click.self="closeVerifyModal">
+      <div v-if="showModal" class="fixed inset-0 z-[99999] grid place-items-center p-4" style="background: rgba(0, 0, 0, 0.75)" @click.self="closeVerifyModal">
         <div class="relative w-full max-w-[420px] rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 sm:p-7">
           <button type="button" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full border border-[var(--border)] bg-[var(--surface-2)] text-[var(--muted)] grid place-items-center cursor-pointer transition-all duration-200 hover:bg-[var(--primary-soft)] hover:text-[var(--primary)] hover:border-[var(--primary)] hover:rotate-90" @click="closeVerifyModal"><X :size="16" /></button>
 
@@ -261,7 +271,7 @@
 </template>
 
 <script setup>
-import { computed, ref, shallowRef, onMounted, onUnmounted, nextTick } from "vue";
+import { computed, ref, shallowRef, onMounted, onUnmounted, nextTick, watch } from "vue";
 import { BookOpen, ChevronDown, ChevronRight, CircleAlert, GraduationCap, Hash, IdCard, Info, LoaderCircle, LockKeyhole, Mars, RotateCcw, Search, SearchCheck, ShieldCheck, ShieldQuestion, UnlockKeyhole, Users, Venus, WifiOff, X, School, ClipboardCheck } from "@/components/Icons.js";
 import { useUiStore } from "@/stores/ui";
 import { useSekolahStore } from "@/stores/sekolah";
@@ -287,6 +297,71 @@ const keyword = ref("");
 const suggestions = shallowRef([]);
 const searchMessage = ref("");
 const searchFocused = ref(false);
+const inputRef = ref(null);
+const activeStep = ref(null);
+const stepCanHover = typeof window !== "undefined" && !!window.matchMedia?.("(hover: hover)")?.matches;
+
+function onStepEnter(i) {
+  if (!stepCanHover) return;
+  activeStep.value = i;
+}
+function onStepLeave() {
+  if (!stepCanHover) return;
+  activeStep.value = null;
+}
+function onStepClick(i) {
+  if (stepCanHover) return;
+  activeStep.value = activeStep.value === i ? null : i;
+}
+
+const searchPlaceholder = ref("");
+const placeholderText = "Cari nama kamu disini...";
+let typewriterTimer = null;
+
+function startPlaceholderTypewriter() {
+  clearTimeout(typewriterTimer);
+  clearInterval(typewriterTimer);
+  searchPlaceholder.value = "";
+  let i = 0;
+  let deleting = false;
+
+  const step = () => {
+    if (!deleting) {
+      i++;
+      searchPlaceholder.value = placeholderText.slice(0, i);
+      if (i >= placeholderText.length) {
+        clearInterval(typewriterTimer);
+        deleting = true;
+        typewriterTimer = setTimeout(() => {
+          typewriterTimer = setInterval(step, 60);
+        }, 1200);
+      }
+    } else {
+      i--;
+      searchPlaceholder.value = placeholderText.slice(0, i);
+      if (i <= 0) {
+        clearInterval(typewriterTimer);
+        deleting = false;
+        typewriterTimer = setTimeout(() => {
+          typewriterTimer = setInterval(step, 80);
+        }, 400);
+      }
+    }
+  };
+
+  typewriterTimer = setInterval(step, 80);
+}
+
+function stopPlaceholderTypewriter() {
+  clearTimeout(typewriterTimer);
+  clearInterval(typewriterTimer);
+  searchPlaceholder.value = placeholderText;
+}
+
+watch(keyword, (val) => {
+  if (val) stopPlaceholderTypewriter();
+  else startPlaceholderTypewriter();
+});
 
 const noActivePeriode = computed(() => sekolahStore.loaded && !sekolahStore.periodeId);
 const searchDisabled = computed(() => networkError.value || noActivePeriode.value);
@@ -296,6 +371,15 @@ function onSearchBoxClick() {
     ui.warning("Belum ada periode aktif. Silakan hubungi admin sekolah untuk mengaktifkan periode.", "Periode Belum Aktif");
   } else if (networkError.value) {
     ui.warning("Tidak dapat menghubungi server. Periksa koneksi Anda lalu coba lagi.", "Koneksi Terputus");
+  }
+}
+
+function onSearchIconClick() {
+  if (searchDisabled.value) { onSearchBoxClick(); return; }
+  if (searchActive.value) {
+    searchSiswa();
+  } else {
+    inputRef.value?.focus();
   }
 }
 
@@ -331,6 +415,11 @@ function kelasDariRombel(rombel) {
 }
 
 const showResultBox = computed(() => suggestions.value.length > 0 || !!searchMessage.value);
+const searchActive = computed(() => searchFocused.value || !!keyword.value || showResultBox.value);
+const inputPadClass = computed(() => {
+  if (!searchActive.value) return "pl-9 pr-3";
+  return keyword.value ? "pl-3 pr-[104px]" : "pl-3 pr-14";
+});
 
 const tahunAjaran = computed(() => sekolahStore.tahunAjaran);
 
@@ -340,15 +429,19 @@ const semester = computed(() => {
   return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 });
 
-function animateValue(targetRef, endValue, duration = 5000) {
-  const maxValue = Math.max(endValue, 1);
-  const increment = maxValue / (duration / 16);
-  let current = 0;
-  const timer = setInterval(() => {
-    current += increment;
-    if (current >= endValue) { targetRef.value = endValue; clearInterval(timer); }
-    else { targetRef.value = Math.round(current); }
-  }, 16);
+function animateValue(targetRef, endValue) {
+  const maxValue = Math.max(endValue, 0);
+  targetRef.value = 0;
+  if (maxValue === 0) return;
+  const duration = Math.min(10000, Math.max(1000, maxValue * 16));
+  const startTime = performance.now();
+  const step = (now) => {
+    const progress = Math.min(1, (now - startTime) / duration);
+    targetRef.value = Math.round(maxValue * progress);
+    if (progress < 1) requestAnimationFrame(step);
+    else targetRef.value = maxValue;
+  };
+  requestAnimationFrame(step);
 }
 
 async function loadDataAwal() {
@@ -415,6 +508,7 @@ function resetSearch() {
   keyword.value = "";
   suggestions.value = [];
   searchMessage.value = "";
+  startPlaceholderTypewriter();
 }
 
 function makeCaptcha() {
@@ -493,9 +587,14 @@ function resumeScroll() { animId = requestAnimationFrame(scrollStep); }
 onMounted(() => {
   sekolahStore.fetchSekolah();
   loadDataAwal();
+  startPlaceholderTypewriter();
   animId = requestAnimationFrame(scrollStep);
 });
 
-onUnmounted(() => { if (animId) cancelAnimationFrame(animId); });
+onUnmounted(() => {
+  if (animId) cancelAnimationFrame(animId);
+  clearTimeout(typewriterTimer);
+  clearInterval(typewriterTimer);
+});
 
 </script>
