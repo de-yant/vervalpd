@@ -46,6 +46,25 @@
   animation: stepBounce 0.9s ease-in-out infinite;
 }
 
+.links-track {
+  animation: marqueeScroll 30s linear infinite;
+  will-change: transform;
+}
+
+.links-track--paused,
+.links-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-33.3333%);
+  }
+}
+
 @keyframes stepBounce {
   0%,
   100% {

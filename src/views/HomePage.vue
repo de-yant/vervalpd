@@ -204,14 +204,14 @@
 
     <!-- LINKS -->
     <section class="links-section w-full max-w-4xl mx-auto overflow-x-hidden">
-      <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 sm:p-8 links-card-inner relative z-10">
+      <div class="w-full rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 sm:p-8 links-card-inner relative z-10 overflow-hidden">
         <div class="flex items-center justify-center gap-2.5 mb-5 pb-4 border-b border-[var(--border)]">
           <GraduationCap :size="14" class="text-[var(--primary)]" />
           <span class="text-[10px] font-black tracking-[0.1em] uppercase text-[var(--muted)]">Aplikasi Lainnya</span>
         </div>
 
-        <div ref="trackRef" class="flex gap-3 overflow-x-auto" style="scrollbar-width: none; -ms-overflow-style: none;" @mouseenter="pauseScroll" @mouseleave="resumeScroll">
-          <a v-for="(link, i) in [...links, ...links, ...links]" :key="i" :href="link.url" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2.5 h-[42px] px-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] text-[var(--text)] text-[13px] font-black hover:bg-[var(--primary-soft)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-all duration-250 shrink-0">
+        <div class="links-track flex w-max" :class="{ 'links-track--paused': marqueePaused }" @mouseenter="pauseMarquee" @mouseleave="resumeMarquee">
+          <a v-for="(link, i) in [...links, ...links, ...links]" :key="i" :href="link.url" target="_blank" rel="noopener noreferrer" class="mr-3 inline-flex items-center gap-2.5 h-[42px] px-4 rounded-xl border border-[var(--border)] bg-[var(--surface-2)] text-[var(--text)] text-[13px] font-black hover:bg-[var(--primary-soft)] hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors duration-250 shrink-0">
             <span class="text-[var(--muted)] w-5 h-5 grid place-items-center">
               <School v-if="link.icon === 'school'" :size="16" />
               <ClipboardCheck v-else-if="link.icon === 'clipboard'" :size="16" />
@@ -270,7 +270,7 @@
 </template>
 
 <script setup>
-import { computed, ref, shallowRef, onMounted, onUnmounted, nextTick, watch } from "vue";
+import { computed, ref, shallowRef, onMounted, onUnmounted, watch } from "vue";
 import { BookOpen, ChevronDown, ChevronRight, CircleAlert, GraduationCap, Hash, IdCard, Info, LoaderCircle, LockKeyhole, Mars, RotateCcw, Search, SearchCheck, ShieldCheck, ShieldQuestion, UnlockKeyhole, Users, Venus, WifiOff, X, School, ClipboardCheck } from "@/components/Icons.js";
 import { useUiStore } from "@/stores/ui";
 import { useSekolahStore } from "@/stores/sekolah";
@@ -361,8 +361,19 @@ function stopPlaceholderTypewriter() {
 }
 
 watch(keyword, (val) => {
-  if (val) stopPlaceholderTypewriter();
-  else startPlaceholderTypewriter();
+  if (val) {
+    stopPlaceholderTypewriter();
+  } else if (!searchFocused.value) {
+    startPlaceholderTypewriter();
+  }
+});
+
+watch(searchFocused, (focused) => {
+  if (focused) {
+    stopPlaceholderTypewriter();
+  } else if (!keyword.value) {
+    startPlaceholderTypewriter();
+  }
 });
 
 const noActivePeriode = computed(() => sekolahStore.loaded && !sekolahStore.periodeId);
@@ -486,10 +497,6 @@ async function loadDataAwal() {
       networkError.value = true;
       ui.alert({ type: "error", title: "Server Error", message: "Server sedang mengalami gangguan. Silakan coba kembali beberapa saat lagi." });
     }
-    nextTick(() => {
-      if (animId) cancelAnimationFrame(animId);
-      if (trackRef.value) animId = requestAnimationFrame(scrollStep);
-    });
   }
 }
 
@@ -578,30 +585,17 @@ const links = [
   { label: "Instagram", url: "https://www.instagram.com/smk2lppmrimajalaya?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==", icon: "instagram" },
 ];
 
-const trackRef = ref(null);
-let animId = null;
-
-function scrollStep() {
-  const el = trackRef.value;
-  if (!el) { animId = requestAnimationFrame(scrollStep); return; }
-  const oneSet = el.scrollWidth / 3;
-  el.scrollLeft += 0.5;
-  if (el.scrollLeft >= oneSet) el.scrollLeft = 0;
-  animId = requestAnimationFrame(scrollStep);
-}
-
-function pauseScroll() { if (animId) cancelAnimationFrame(animId); }
-function resumeScroll() { animId = requestAnimationFrame(scrollStep); }
+const marqueePaused = ref(false);
+function pauseMarquee() { marqueePaused.value = true; }
+function resumeMarquee() { marqueePaused.value = false; }
 
 onMounted(() => {
   sekolahStore.fetchSekolah();
   loadDataAwal();
   startPlaceholderTypewriter();
-  animId = requestAnimationFrame(scrollStep);
 });
 
 onUnmounted(() => {
-  if (animId) cancelAnimationFrame(animId);
   clearTimeout(typewriterTimer);
   clearInterval(typewriterTimer);
 });
