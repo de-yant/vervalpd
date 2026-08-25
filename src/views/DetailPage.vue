@@ -42,7 +42,7 @@
         </div>
         <div class="meta-chip">
           <span>NIS</span>
-          <strong>{{ display(getField("nipd")) }}</strong>
+          <strong>{{ nisDisplay }}</strong>
         </div>
         <div class="meta-chip">
           <span>Kelas</span>
@@ -67,7 +67,7 @@
           </div>
           <div class="info-rows">
             <InfoRow label="Nama Lengkap" :value="getField('nama')" />
-            <InfoRow label="NIS" :value="getField('nipd')" />
+            <InfoRow label="NIS" :value="nisDisplay" />
             <InfoRow label="NISN" :value="getField('nisn')" />
             <InfoRow label="NIK" :value="getField('nik')" />
             <InfoRow label="Jenis Kelamin" :value="jenisKelamin" />
@@ -699,6 +699,18 @@ function display(value) {
   if (value === null || value === undefined || value === "") return "-";
   return value;
 }
+
+// NIS wajar: angka maksimal 12 digit. UUID dari sync Dapodik ditampilkan "-"
+function nisText(value) {
+  const v = String(value ?? "").trim();
+  if (!v || v === "-") return "-";
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v);
+  if (isUuid) return "-";
+  if (!/^\d{1,12}$/.test(v)) return "-";
+  return v;
+}
+
+const nisDisplay = computed(() => nisText(getField("nipd")));
 
 function formatTanggal(value) {
   if (!value || value === "-") return "-";
