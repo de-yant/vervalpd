@@ -395,6 +395,9 @@
         </div>
       </div>
     </Transition>
+
+    <!-- POPUP PENGUMUMAN -->
+    <PengumumanPopup />
   </AppLayout>
 </template>
 
@@ -429,6 +432,7 @@ import { clearDraftFiles, deleteDraftFile, loadDraftFile, saveDraftFile } from "
 import { useSekolahStore } from "@/stores/sekolah";
 import { useUiStore } from "@/stores/ui";
 import AppLayout from "@/layouts/AppLayout.vue";
+import PengumumanPopup from "@/components/PengumumanPopup.vue";
 import PageLoading from "@/components/PageLoading.vue";
 
 /* ── InfoRow ── */
