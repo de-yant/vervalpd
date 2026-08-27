@@ -288,7 +288,11 @@
                 v-model.trim="form.pesan"
                 rows="3"
                 placeholder="Contoh: Nama ibu salah, tanggal lahir belum sesuai"
+                @blur="pesanTouched = true"
               ></textarea>
+              <span v-if="pesanTouched && (!form.pesan || form.pesan.length < 5)" class="field-error">
+                <CircleAlert :size="11" /> Pesan wajib diisi minimal 5 karakter.
+              </span>
             </div>
 
 <div class="upload-grid">
@@ -297,7 +301,7 @@
                 v-for="doc in uploadDocs"
                 :key="doc.key"
               >
-                <label>{{ doc.label }}</label>
+                <label>{{ doc.label }} <span v-if="doc.key === 'kk'" class="required">*</span></label>
                 <div class="upload-box" :class="{ 'upload-box--filled': form[doc.key]?.length }">
                   <Upload :size="14" />
                   <span>{{ form[doc.key]?.[0]?.name || "Pilih file…" }}</span>
@@ -305,16 +309,19 @@
                     v-if="form[doc.key]?.length"
                     type="button"
                     class="file-remove"
-                    @click.stop="removeFile(doc.key)"
+                    @click.stop="removeFile(doc.key); if (doc.key === 'kk') kkTouched = true"
                   >
                     <X :size="12" />
                   </button>
                   <input
                     type="file"
                     accept=".jpg,.jpeg,.png,.pdf"
-                    @change="setFile($event, doc.key)"
+                    @change="setFile($event, doc.key); if (doc.key === 'kk') kkTouched = true"
                   />
                 </div>
+                <span v-if="doc.key === 'kk' && kkTouched && !form.kk?.length" class="field-error">
+                  <CircleAlert :size="11" /> Kartu Keluarga wajib diupload.
+                </span>
               </div>
             </div>
 
@@ -327,6 +334,13 @@
                   <li>Minimal 1 file (Kartu Keluarga) wajib dilampirkan.</li>
                   <li>Maksimal 5 MB per file.</li>
                 </ul>
+              </div>
+            </div>
+
+            <div v-if="validationErrors.length" class="validation-errors">
+              <div v-for="(err, i) in validationErrors" :key="i" class="validation-error">
+                <CircleAlert :size="13" />
+                <span>{{ err }}</span>
               </div>
             </div>
           </div>
@@ -469,6 +483,10 @@ const form = ref({
   pendukung: [],
 });
 
+const formTouched = ref(false);
+const pesanTouched = ref(false);
+const kkTouched = ref(false);
+
 const uploadDocs = [
   { key: "kk", label: "Kartu Keluarga" },
   { key: "ijazah_smp", label: "Ijazah SMP" },
@@ -561,6 +579,18 @@ const canSubmitPerbaikan = computed(() => {
     form.value.pesan.length >= 5 &&
     form.value.kk?.length >= 1 &&
     totalFiles <= MAX_FILES;
+});
+
+const validationErrors = computed(() => {
+  if (verificationStatus.value !== "tidak_sesuai" || !formTouched.value) return [];
+  const errors = [];
+  if (!form.value.pesan || form.value.pesan.length < 5) {
+    errors.push("Pesan / keterangan perbaikan wajib diisi minimal 5 karakter.");
+  }
+  if (!form.value.kk?.length) {
+    errors.push("Kartu Keluarga (KK) wajib diupload.");
+  }
+  return errors;
 });
 const isLockedSubmit = computed(() =>
   submitLock.value.expiredAt
@@ -920,6 +950,9 @@ function resetPilihan() {
 
 function clearForm() {
   verificationStatus.value = "sesuai";
+  formTouched.value = false;
+  pesanTouched.value = false;
+  kkTouched.value = false;
   form.value = {
     pesan: "",
     kk: [],
