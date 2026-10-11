@@ -69,7 +69,6 @@
             <InfoRow label="Nama Lengkap" :value="getField('nama')" />
             <InfoRow label="NIS" :value="nisDisplay" />
             <InfoRow label="NISN" :value="getField('nisn')" />
-            <InfoRow label="NIK" :value="getField('nik')" />
             <InfoRow label="Jenis Kelamin" :value="jenisKelamin" />
             <InfoRow label="Tempat Lahir" :value="getField('tempat_lahir')" />
             <InfoRow
@@ -141,28 +140,17 @@
           </div>
         </div>
 
-        <!-- Kontak, Fisik & Alamat -->
+        <!-- Alamat & Domisili -->
         <div class="info-card info-card--full">
           <div class="card-head">
             <div class="card-head-icon"><Phone :size="15" /></div>
             <div>
-              <h3>Kontak, Fisik &amp; Alamat</h3>
+              <h3>Alamat &amp; Domisili</h3>
               <p>Data tambahan dan domisili peserta didik.</p>
             </div>
           </div>
           <div class="info-rows info-rows--2col">
-            <InfoRow
-              label="Telepon Rumah"
-              :value="getField('nomor_telepon_rumah')"
-            />
-            <InfoRow
-              label="No. Seluler"
-              :value="getField('nomor_telepon_seluler')"
-            />
-            <InfoRow label="Email" :value="getField('email')" />
             <InfoRow label="Anak Ke" :value="getField('anak_keberapa')" />
-            <InfoRow label="Tinggi Badan" :value="tinggiBadan" />
-            <InfoRow label="Berat Badan" :value="beratBadan" />
             <InfoRow label="Alamat" :value="getField('alamat_jalan')" />
             <InfoRow label="RT / RW" :value="rtRw" />
             <InfoRow
@@ -555,14 +543,6 @@ const jenisKelamin = computed(() => {
 const tingkatKelas = computed(() => {
   const t = getField("tingkat_pendidikan_id");
   return t !== "-" ? `Kelas ${t}` : "-";
-});
-const tinggiBadan = computed(() => {
-  const v = getField("tinggi_badan");
-  return v !== "-" ? `${v} cm` : "-";
-});
-const beratBadan = computed(() => {
-  const v = getField("berat_badan");
-  return v !== "-" ? `${v} kg` : "-";
 });
 const rtRw = computed(() => {
   const rt = getField("rt");

@@ -27,7 +27,7 @@ export async function getDetailSiswa(id) {
   return res.data?.data || null;
 }
 
-// PUBLIC — detail satu siswa, NIK tersensor
+// PUBLIC — detail satu siswa, tanpa NIK
 export async function getPublicDetailSiswa(id) {
   const res = await api.get(`/api/siswa/public/detail/${id}`);
   return res.data?.data || null;
